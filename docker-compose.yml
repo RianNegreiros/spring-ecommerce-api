@@ -1,0 +1,12 @@
+version: "3.9"
+services:
+  mysql_ecommerce:
+    container_name: mysql_ecommerce
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ecommerce
+      MYSQL_PASSWORD: mysql
+      MYSQL_USER: mysql
+    ports:
+      - '5432:5432'
