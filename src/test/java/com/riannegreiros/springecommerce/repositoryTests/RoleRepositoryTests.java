@@ -1,4 +1,4 @@
-package com.riannegreiros.springecommerce;
+package com.riannegreiros.springecommerce.repositoryTests;
 
 import com.riannegreiros.springecommerce.entity.Role;
 import com.riannegreiros.springecommerce.repository.RoleRepository;
