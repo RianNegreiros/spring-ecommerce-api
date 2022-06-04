@@ -4,7 +4,6 @@ import com.riannegreiros.springecommerce.entity.Role;
 import com.riannegreiros.springecommerce.entity.User;
 import com.riannegreiros.springecommerce.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
-@AutoConfigureTestDatabase(replace = Replace.NONE)
 public class UserRepositoryTests {
 
     @Autowired
@@ -49,5 +47,10 @@ public class UserRepositoryTests {
 
         savedUser.getRoles().remove(role);
         Assertions.assertTrue(user.getRoles().isEmpty());
+    }
+
+    @Test
+    public void testGetUserByEmail() {
+        Assertions.assertNotNull(userRepository.findUserByEmail("any_mail@mail.com"));
     }
 }
