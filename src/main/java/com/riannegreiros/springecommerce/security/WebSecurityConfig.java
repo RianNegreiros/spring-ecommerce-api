@@ -1,5 +1,6 @@
 package com.riannegreiros.springecommerce.security;
 
+import com.riannegreiros.springecommerce.utils.JWTConstants;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -48,6 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.logout().permitAll();
+        http.rememberMe().key(JWTConstants.JWT_SECRET).tokenValiditySeconds(7 * 24 * 60 * 60);
     }
 
     @Override
