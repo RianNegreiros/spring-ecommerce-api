@@ -99,4 +99,8 @@ public class User {
     public void addRole(Role role) {
         this.roles.add(role);
     }
+
+    public void removeRole(String name) {
+        this.roles.removeIf(role -> role.getName().equalsIgnoreCase(name));
+    }
 }

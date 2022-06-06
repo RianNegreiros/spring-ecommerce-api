@@ -15,12 +15,11 @@ public class UserRepositoryTests {
 
     @Autowired
     private UserRepository userRepository;
-
     private User user;
     private User savedUser;
 
     @BeforeEach
-    public void createUser() {
+    public void setUp() {
         user = new User("any_mail@mail.com", "any_password", "any_name", "any_name");
         savedUser = userRepository.save(user);
     }
@@ -33,23 +32,13 @@ public class UserRepositoryTests {
     @Test
     public void testAddRole() {
         savedUser.addRole(new Role("any_role", "any_role_description"));
-        savedUser.addRole(new Role("any_role", "any_role_description"));
         assertThat(savedUser.getRoles()).isNotEmpty();
     }
 
     @Test
     public void testRemoveRole() {
-        Role role = new Role("any_role", "any_role_description");
-        Role role1 = new Role("any_role1", "any_role_description1");
-
-        savedUser.addRole(role);
-        savedUser.addRole(role1);
-        assertThat(user.getRoles()).contains(role, role1);
-
-        savedUser.getRoles().remove(role);
-        assertThat(user.getRoles()).doesNotContain(role);
-
-        savedUser.getRoles().remove(role1);
+        savedUser.addRole(new Role("any_role", "any_role_description"));
+        savedUser.removeRole("any_role");
         assertThat(user.getRoles()).isNullOrEmpty();
     }
 
