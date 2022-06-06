@@ -48,7 +48,7 @@ public class UserRepositoryTests {
     }
 
     @Test
-    public void testGetUserByEmail() {
+    public void testFindUserByEmail() {
         Assertions.assertNotNull(userRepository.findUserByEmail("any_mail@mail.com"));
     }
 }
