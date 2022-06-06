@@ -5,6 +5,8 @@ import com.riannegreiros.springecommerce.exception.ResourceNotFoundException;
 import com.riannegreiros.springecommerce.repository.UserRepository;
 import com.riannegreiros.springecommerce.service.UserService;
 import com.riannegreiros.springecommerce.utils.GetAllUsersResponse;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +14,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -71,5 +75,16 @@ public class UserServiceImpl implements UserService {
     public void delete(UUID id) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id.toString()));
         userRepository.delete(user);
+    }
+
+    public void writeUsersToCSV(Writer writer) throws IOException {
+        List<User> userList = userRepository.findAll();
+        try (CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT.withHeader("ID", "E-mail", "First Name", "Last Name", "Roles"))) {
+            for (User user : userList) {
+                csvPrinter.printRecord(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getRoles());
+            }
+        } catch (IOException ex) {
+            throw new IOException("Could not save file." + ex);
+        }
     }
 }

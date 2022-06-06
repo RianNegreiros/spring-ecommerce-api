@@ -3,14 +3,12 @@ package com.riannegreiros.springecommerce.controller;
 import com.riannegreiros.springecommerce.entity.User;
 import com.riannegreiros.springecommerce.service.UserService;
 import com.riannegreiros.springecommerce.utils.AppConstants;
-import com.riannegreiros.springecommerce.utils.FileUploadUtil;
 import com.riannegreiros.springecommerce.utils.GetAllUsersResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -32,6 +30,13 @@ public class UserController {
             @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
     ) {
         return userService.findAll(page, size, sortBy, sortDir);
+    }
+
+    @GetMapping("/csv")
+    public void usersInCSV(HttpServletResponse servletResponse) throws IOException {
+        servletResponse.setContentType("text/csv");
+        servletResponse.addHeader("Content-Disposition","attachment; filename=\"users.csv\"");
+        userService.writeUsersToCSV(servletResponse.getWriter());
     }
 
     @PostMapping()

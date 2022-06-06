@@ -3,6 +3,8 @@ package com.riannegreiros.springecommerce.service;
 import com.riannegreiros.springecommerce.entity.User;
 import com.riannegreiros.springecommerce.utils.GetAllUsersResponse;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.UUID;
 
 public interface UserService {
@@ -10,4 +12,5 @@ public interface UserService {
     User save(User user);
     User update(User user, UUID id);
     void delete(UUID id);
+    void writeUsersToCSV(Writer writer) throws IOException;
 }
