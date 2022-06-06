@@ -12,5 +12,7 @@ public interface UserService {
     User save(User user);
     User update(User user, UUID id);
     void delete(UUID id);
+
+    User findByEmail(String email);
     void writeUsersToCSV(Writer writer) throws IOException;
 }

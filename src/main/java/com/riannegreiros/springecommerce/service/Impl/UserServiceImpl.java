@@ -77,6 +77,11 @@ public class UserServiceImpl implements UserService {
         userRepository.delete(user);
     }
 
+    @Override
+    public User findByEmail(String email) {
+        return userRepository.findUserByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
+    }
+
     public void writeUsersToCSV(Writer writer) throws IOException {
         List<User> userList = userRepository.findAll();
         try (CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT.withHeader("ID", "E-mail", "First Name", "Last Name", "Roles"))) {
