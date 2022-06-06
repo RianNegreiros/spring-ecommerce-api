@@ -21,29 +21,29 @@ public class UserController {
     }
 
     @GetMapping
-    public GetAllUsersResponse getAllUsers(
+    public GetAllUsersResponse findAll(
             @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) Integer page,
             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) Integer size,
             @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
             @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
     ) {
-        return userService.getAllUsers(page, size, sortBy, sortDir);
+        return userService.findAll(page, size, sortBy, sortDir);
     }
 
     @PostMapping()
-    public User saveUser(@RequestBody User user) {
+    public User save(@RequestBody User user) {
         return userService.save(user);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@RequestBody User user, @PathVariable(name = "id")UUID id) {
-        User userResponse = userService.updateUser(user, id);
+    public ResponseEntity<User> update(@RequestBody User user, @PathVariable(name = "id")UUID id) {
+        User userResponse = userService.update(user, id);
 
         return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable(name = "id") UUID id) {
-        userService.deleteUser(id);
+    public void delete(@PathVariable(name = "id") UUID id) {
+        userService.delete(id);
     }
 }

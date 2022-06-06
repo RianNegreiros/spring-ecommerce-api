@@ -69,7 +69,7 @@ public class UserServiceTests {
         given(userRepository.findById(any()))
                 .willReturn(Optional.ofNullable(user));
 
-        userService.updateUser(updateUser, user.getId());
+        userService.update(updateUser, user.getId());
 
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
 
@@ -88,7 +88,7 @@ public class UserServiceTests {
         given(userRepository.findById(any()))
                 .willThrow(new ResourceNotFoundException("User", "id", null));
 
-        assertThatThrownBy(() -> userService.updateUser(user, UUID.randomUUID()))
+        assertThatThrownBy(() -> userService.update(user, UUID.randomUUID()))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining(String.format("%s not found with %s : '%s'", "User", "id", null));
 
@@ -105,7 +105,7 @@ public class UserServiceTests {
         given(userRepository.findAll(any(Pageable.class)))
                 .willReturn(userPage);
 
-        userService.getAllUsers(0, 10, "id", "asc");
+        userService.findAll(0, 10, "id", "asc");
 
         ArgumentCaptor<Pageable> valueArgumentCaptor = ArgumentCaptor.forClass(Pageable.class);
 
