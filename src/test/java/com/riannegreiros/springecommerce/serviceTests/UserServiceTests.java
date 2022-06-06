@@ -10,10 +10,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -93,5 +93,26 @@ public class UserServiceTests {
                 .hasMessageContaining(String.format("%s not found with %s : '%s'", "User", "id", null));
 
         verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    public void testGetAllUsers() {
+        User user1 = new User("any_mail@mail.com", "any_password", "any_name", "any_name");
+        User user2 = new User("any_mail@mail.com", "any_password", "any_name", "any_name");
+        User user3 = new User("any_mail@mail.com", "any_password", "any_name", "any_name");
+        List<User> userList = Arrays.asList(user, user1, user2, user3);
+        Page<User> userPage = new PageImpl<>(userList);
+        given(userRepository.findAll(any(Pageable.class)))
+                .willReturn(userPage);
+
+        userService.getAllUsers(0, 10, "id", "asc");
+
+        ArgumentCaptor<Pageable> valueArgumentCaptor = ArgumentCaptor.forClass(Pageable.class);
+
+        verify(userRepository).findAll(valueArgumentCaptor.capture());
+
+        Pageable capturedValue = valueArgumentCaptor.getValue();
+
+        assertThat(capturedValue).isInstanceOf(Pageable.class);
     }
 }

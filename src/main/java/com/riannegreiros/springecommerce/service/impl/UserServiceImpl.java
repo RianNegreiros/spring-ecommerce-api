@@ -4,9 +4,15 @@ import com.riannegreiros.springecommerce.entity.User;
 import com.riannegreiros.springecommerce.exception.ResourceNotFoundException;
 import com.riannegreiros.springecommerce.repository.UserRepository;
 import com.riannegreiros.springecommerce.service.UserService;
+import com.riannegreiros.springecommerce.utils.GetAllUsersResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -44,5 +50,20 @@ public class UserServiceImpl implements UserService {
         findUser.setRoles(user.getRoles());
 
         return userRepository.save(findUser);
+    }
+
+    @Override
+    public GetAllUsersResponse getAllUsers(Integer page, Integer size, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<User> users = userRepository.findAll(pageable);
+        List<User> userList = users.getContent();
+
+        return new GetAllUsersResponse(userList,
+                users.getNumber(),
+                users.getSize(),
+                users.getTotalElements(),
+                users.getTotalPages(),
+                users.isLast());
     }
 }
