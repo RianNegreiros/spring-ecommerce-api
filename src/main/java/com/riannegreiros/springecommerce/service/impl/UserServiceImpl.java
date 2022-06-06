@@ -1,10 +1,13 @@
 package com.riannegreiros.springecommerce.service.impl;
 
 import com.riannegreiros.springecommerce.entity.User;
+import com.riannegreiros.springecommerce.exception.ResourceNotFoundException;
 import com.riannegreiros.springecommerce.repository.UserRepository;
 import com.riannegreiros.springecommerce.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -27,5 +30,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public User GetUserByEmail(String email) {
         return userRepository.findUserByEmail(email);
+    }
+
+    @Override
+    public User updateUser(User user, UUID id) {
+        User findUser = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id.toString()));
+
+        findUser.setEmail(user.getEmail());
+        findUser.setFirstName(user.getFirstName());
+        findUser.setLastName(user.getLastName());
+        findUser.setPassword(user.getPassword());
+        findUser.setPhoto(user.getPhoto());
+        findUser.setRoles(user.getRoles());
+
+        return userRepository.save(findUser);
     }
 }
