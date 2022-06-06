@@ -11,7 +11,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -39,5 +46,17 @@ public class UserServiceTests {
         User capturedUser = userArgumentCaptor.getValue();
 
         assertThat(capturedUser).isEqualTo(user);
+    }
+    @Test
+    public void testThrowIfEmailIsTaken() {
+        User user = new User("any_mail@mail.com", "any_password", "any_name", "any_name");
+        given(userRepository.findUserByEmail(anyString()))
+                .willReturn(Optional.of(user));
+
+        assertThatThrownBy(() -> userService.save(user))
+                .isInstanceOf(Error.class)
+                .hasMessageContaining("User already exists");
+
+        verify(userRepository, never()).save(any());
     }
 }
