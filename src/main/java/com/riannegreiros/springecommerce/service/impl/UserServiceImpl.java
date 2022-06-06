@@ -66,4 +66,10 @@ public class UserServiceImpl implements UserService {
                 users.getTotalPages(),
                 users.isLast());
     }
+
+    @Override
+    public void deleteUser(UUID id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id.toString()));
+        userRepository.delete(user);
+    }
 }
