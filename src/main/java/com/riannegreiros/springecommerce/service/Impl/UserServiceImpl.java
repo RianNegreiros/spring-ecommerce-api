@@ -1,4 +1,4 @@
-package com.riannegreiros.springecommerce.service.impl;
+package com.riannegreiros.springecommerce.service.Impl;
 
 import com.riannegreiros.springecommerce.entity.User;
 import com.riannegreiros.springecommerce.exception.ResourceNotFoundException;
