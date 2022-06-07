@@ -1,4 +1,4 @@
-package com.riannegreiros.springecommerce.modules.user.exception;
+package com.riannegreiros.springecommerce.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

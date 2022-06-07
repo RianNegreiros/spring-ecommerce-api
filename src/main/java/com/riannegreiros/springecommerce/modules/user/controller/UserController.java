@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.riannegreiros.springecommerce.modules.user.JWTConstants;
 import com.riannegreiros.springecommerce.modules.user.entity.Role;
 import com.riannegreiros.springecommerce.modules.user.entity.User;
-import com.riannegreiros.springecommerce.modules.user.exception.APIException;
+import com.riannegreiros.springecommerce.exception.APIException;
 import com.riannegreiros.springecommerce.modules.user.service.UserService;
 import com.riannegreiros.springecommerce.utils.AppConstants;
 import com.riannegreiros.springecommerce.utils.FindAllResponse;

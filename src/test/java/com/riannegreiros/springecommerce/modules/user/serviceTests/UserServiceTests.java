@@ -1,7 +1,7 @@
 package com.riannegreiros.springecommerce.modules.user.serviceTests;
 
 import com.riannegreiros.springecommerce.modules.user.entity.User;
-import com.riannegreiros.springecommerce.modules.user.exception.ResourceNotFoundException;
+import com.riannegreiros.springecommerce.exception.ResourceNotFoundException;
 import com.riannegreiros.springecommerce.modules.user.repository.UserRepository;
 import com.riannegreiros.springecommerce.modules.user.service.Impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,4 +1,4 @@
-package com.riannegreiros.springecommerce.modules.user.security;
+package com.riannegreiros.springecommerce.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

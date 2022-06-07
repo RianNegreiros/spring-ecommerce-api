@@ -1,4 +1,4 @@
-package com.riannegreiros.springecommerce.modules.user.security;
+package com.riannegreiros.springecommerce.security;
 
 import com.riannegreiros.springecommerce.modules.user.JWTConstants;
 import org.springframework.context.annotation.Bean;
