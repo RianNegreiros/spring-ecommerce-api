@@ -112,7 +112,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable(name = "id") UUID id) {
+    public void delete(@PathVariable(name = "id") UUID id) throws IOException {
         userService.delete(id);
     }
 }
