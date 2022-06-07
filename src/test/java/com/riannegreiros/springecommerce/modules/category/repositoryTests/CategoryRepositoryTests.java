@@ -47,4 +47,13 @@ public class CategoryRepositoryTests {
         assertThat(categoryList.get(0).getParent()).isNull();
         assertThat(categoryList.get(1).getParent()).isNull();
     }
+
+    @Test
+    public void testFindByName() {
+        Category category = new Category("any_category");
+        categoryRepository.save(category);
+        Category findCategory = categoryRepository.findByName("any_category");
+
+        assertThat(findCategory.getId()).isEqualTo(category.getId());
+    }
 }
