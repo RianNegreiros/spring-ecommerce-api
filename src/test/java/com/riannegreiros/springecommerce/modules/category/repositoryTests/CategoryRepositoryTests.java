@@ -21,4 +21,14 @@ public class CategoryRepositoryTests {
 
         assertThat(savedCategory.getId()).isEqualTo(category.getId());
     }
+
+    @Test
+    public void testCreateSubCategory() {
+        Category parentCategory = new Category("any_category");
+        Category subCategory = new Category("any_sub_category", parentCategory);
+        Category savedCategory = categoryRepository.save(subCategory);
+
+        assertThat(savedCategory.getId()).isEqualTo(subCategory.getId());
+        assertThat(savedCategory.getParent()).isEqualTo(parentCategory);
+    }
 }
