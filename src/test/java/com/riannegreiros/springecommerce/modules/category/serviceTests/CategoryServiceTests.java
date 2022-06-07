@@ -74,4 +74,28 @@ public class CategoryServiceTests {
 
         verify(categoryRepository, never()).save(any());
     }
+
+    @Test
+    public void updateCategory() {
+        Category category = new Category("any_category");
+        Category updateCategory = new Category();
+        updateCategory.setName("updated_name");
+        updateCategory.setAlias("updated_alias");
+        updateCategory.setImage("updated_image");
+
+        given(categoryRepository.findById(any()))
+                .willReturn(Optional.of(category));
+
+        categoryService.update(updateCategory, category.getId());
+
+        ArgumentCaptor<Category> categoryArgumentCaptor = ArgumentCaptor.forClass(Category.class);
+
+        verify(categoryRepository).save(categoryArgumentCaptor.capture());
+
+        Category capturedCategory = categoryArgumentCaptor.getValue();
+
+        assertThat(capturedCategory.getName()).isEqualTo(updateCategory.getName());
+        assertThat(capturedCategory.getAlias()).isEqualTo(updateCategory.getAlias());
+        assertThat(capturedCategory.getImage()).isEqualTo(updateCategory.getImage());
+    }
 }

@@ -34,6 +34,10 @@ public class Category {
         this.parent = parent;
     }
 
+    public Category() {
+
+    }
+
     public Long getId() {
         return id;
     }

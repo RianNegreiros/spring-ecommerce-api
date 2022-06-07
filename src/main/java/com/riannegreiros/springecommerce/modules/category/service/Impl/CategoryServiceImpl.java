@@ -3,7 +3,6 @@ package com.riannegreiros.springecommerce.modules.category.service.Impl;
 import com.riannegreiros.springecommerce.modules.category.entity.Category;
 import com.riannegreiros.springecommerce.modules.category.repository.CategoryRepository;
 import com.riannegreiros.springecommerce.modules.category.service.CategoryService;
-import com.riannegreiros.springecommerce.modules.user.entity.User;
 import com.riannegreiros.springecommerce.modules.user.exception.ResourceNotFoundException;
 import com.riannegreiros.springecommerce.utils.FileUploadUtil;
 import com.riannegreiros.springecommerce.utils.FindAllResponse;
