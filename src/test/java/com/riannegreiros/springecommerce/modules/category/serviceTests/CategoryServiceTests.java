@@ -11,7 +11,14 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -53,5 +60,18 @@ public class CategoryServiceTests {
         Category capturedSubCategory = userArgumentCaptor.getValue();
 
         assertThat(capturedSubCategory).isEqualTo(subCategory);
+    }
+
+    @Test
+    public void testThrowIfCategoryExists() {
+        Category category = new Category("any_category");
+        given(categoryRepository.findByName(anyString()))
+                .willReturn(category);
+
+        assertThatThrownBy(() -> categoryService.save(category))
+                .isInstanceOf(Error.class)
+                .hasMessageContaining("Category already exists with this name: " + category.getName());
+
+        verify(categoryRepository, never()).save(any());
     }
 }

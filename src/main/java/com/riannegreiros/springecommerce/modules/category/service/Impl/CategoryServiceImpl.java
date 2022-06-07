@@ -57,7 +57,7 @@ public class CategoryServiceImpl implements CategoryService {
     public Category save(Category category) {
         Category categoryExists = categoryRepository.findByName(category.getName());
         if (categoryExists != null) {
-            throw new Error("Category already exists!");
+            throw new Error("Category already exists with this name: " + category.getName());
         }
         return categoryRepository.save(category);
     }
