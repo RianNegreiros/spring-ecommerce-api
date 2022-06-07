@@ -66,7 +66,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id.toString()));
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
         category.setImage(fileName);
-        String uploadDir = "user-images/" + category.getId();
+        String uploadDir = "categories-images/" + category.getId();
         FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
     }
 }
