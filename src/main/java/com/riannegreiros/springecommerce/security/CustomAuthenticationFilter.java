@@ -3,7 +3,8 @@ package com.riannegreiros.springecommerce.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.riannegreiros.springecommerce.entity.User;
+import com.riannegreiros.springecommerce.modules.user.entity.User;
+import com.riannegreiros.springecommerce.modules.user.JWTConstants;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,7 +22,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.riannegreiros.springecommerce.utils.JWTConstants.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -52,16 +52,16 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
         String access_token = JWT.create()
                 .withSubject(userDetails.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION))
+                .withExpiresAt(new Date(System.currentTimeMillis() + JWTConstants.TOKEN_EXPIRATION))
                 .withIssuer(request.getRequestURL().toString())
                 .withClaim("roles", userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-                .sign(Algorithm.HMAC512(JWT_SECRET.getBytes()));
+                .sign(Algorithm.HMAC512(JWTConstants.JWT_SECRET.getBytes()));
 
         String refresh_token = JWT.create()
                 .withSubject(userDetails.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION))
+                .withExpiresAt(new Date(System.currentTimeMillis() + JWTConstants.REFRESH_TOKEN_EXPIRATION))
                 .withIssuer(request.getRequestURL().toString())
-                .sign(Algorithm.HMAC512(JWT_SECRET.getBytes()));
+                .sign(Algorithm.HMAC512(JWTConstants.JWT_SECRET.getBytes()));
 
         Map<String, String> tokens = new HashMap<>();
         tokens.put("access_token", access_token);

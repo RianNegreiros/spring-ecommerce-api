@@ -1,21 +1,22 @@
 package com.riannegreiros.springecommerce.utils;
 
-import com.riannegreiros.springecommerce.entity.User;
+import com.riannegreiros.springecommerce.modules.user.entity.User;
 
+import java.lang.reflect.GenericArrayType;
 import java.util.List;
 
-public class GetAllUsersResponse {
-    private List<User> content;
+public class FindAllResponse {
+    private List<?> content;
     private Integer page;
     private Integer size;
     private Long totalElements;
     private Integer totalPages;
     private Boolean last;
 
-    public GetAllUsersResponse() {
+    public FindAllResponse() {
     }
 
-    public GetAllUsersResponse(List<User> content, Integer page, Integer size, Long totalElements, Integer totalPages, Boolean last) {
+    public FindAllResponse(List<?> content, Integer page, Integer size, Long totalElements, Integer totalPages, Boolean last) {
         this.content = content;
         this.page = page;
         this.size = size;
@@ -24,11 +25,11 @@ public class GetAllUsersResponse {
         this.last = last;
     }
 
-    public List<User> getContent() {
+    public List<?> getContent() {
         return content;
     }
 
-    public void setContent(List<User> content) {
+    public void setContent(List<?> content) {
         this.content = content;
     }
 

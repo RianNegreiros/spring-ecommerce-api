@@ -1,10 +1,11 @@
-package com.riannegreiros.springecommerce.service.Impl;
+package com.riannegreiros.springecommerce.modules.user.service.Impl;
 
-import com.riannegreiros.springecommerce.entity.User;
+import com.riannegreiros.springecommerce.modules.user.entity.User;
 import com.riannegreiros.springecommerce.exception.ResourceNotFoundException;
-import com.riannegreiros.springecommerce.repository.UserRepository;
-import com.riannegreiros.springecommerce.service.UserService;
-import com.riannegreiros.springecommerce.utils.GetAllUsersResponse;
+import com.riannegreiros.springecommerce.modules.user.repository.UserRepository;
+import com.riannegreiros.springecommerce.modules.user.service.UserService;
+import com.riannegreiros.springecommerce.utils.FileUploadUtil;
+import com.riannegreiros.springecommerce.utils.FindAllResponse;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -57,13 +60,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public GetAllUsersResponse findAll(Integer page, Integer size, String sortBy, String sortDir) {
+    public FindAllResponse findAll(Integer page, Integer size, String sortBy, String sortDir) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<User> users = userRepository.findAll(pageable);
         List<User> userList = users.getContent();
 
-        return new GetAllUsersResponse(userList,
+        return new FindAllResponse(userList,
                 users.getNumber(),
                 users.getSize(),
                 users.getTotalElements(),
@@ -72,9 +75,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(UUID id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id.toString()));
-        userRepository.delete(user);
+    public void delete(UUID id) throws IOException {
+        User userExist = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id.toString()));
+        FileUploadUtil.deleteFile(userExist.getImagePath());
+        userRepository.deleteById(id);
     }
 
     @Override
@@ -82,6 +86,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findUserByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
     }
 
+    @Override
     public void writeUsersToCSV(Writer writer) throws IOException {
         List<User> userList = userRepository.findAll();
         try (CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT.withHeader("ID", "E-mail", "First Name", "Last Name", "Roles"))) {
@@ -91,5 +96,14 @@ public class UserServiceImpl implements UserService {
         } catch (IOException ex) {
             throw new IOException("Could not save file." + ex);
         }
+    }
+
+    @Override
+    public void saveImage(MultipartFile multipartFile, UUID id) throws IOException {
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id.toString()));
+        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        user.setPhoto(fileName);
+        String uploadDir = "user-images/" + user.getId();
+        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
     }
 }

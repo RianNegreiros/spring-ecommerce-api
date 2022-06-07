@@ -1,13 +1,12 @@
-package com.riannegreiros.springecommerce.repositoryTests;
+package com.riannegreiros.springecommerce.modules.user.repositoryTests;
 
-import com.riannegreiros.springecommerce.entity.Role;
-import com.riannegreiros.springecommerce.entity.User;
-import com.riannegreiros.springecommerce.repository.UserRepository;
+import com.riannegreiros.springecommerce.modules.user.entity.Role;
+import com.riannegreiros.springecommerce.modules.user.entity.User;
+import com.riannegreiros.springecommerce.modules.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

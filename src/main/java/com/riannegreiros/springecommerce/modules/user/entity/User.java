@@ -1,4 +1,4 @@
-package com.riannegreiros.springecommerce.entity;
+package com.riannegreiros.springecommerce.modules.user.entity;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -102,5 +102,11 @@ public class User {
 
     public void removeRole(String name) {
         this.roles.removeIf(role -> role.getName().equalsIgnoreCase(name));
+    }
+
+    @Transient
+    public String getImagePath() {
+        if (photo == null || id == null) return null;
+        return "/user-images/" + id + "/" + photo;
     }
 }

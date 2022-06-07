@@ -1,7 +1,7 @@
 package com.riannegreiros.springecommerce.security;
 
-import com.riannegreiros.springecommerce.entity.Role;
-import com.riannegreiros.springecommerce.entity.User;
+import com.riannegreiros.springecommerce.modules.user.entity.Role;
+import com.riannegreiros.springecommerce.modules.user.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

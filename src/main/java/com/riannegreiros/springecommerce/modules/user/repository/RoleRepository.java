@@ -1,6 +1,6 @@
-package com.riannegreiros.springecommerce.repository;
+package com.riannegreiros.springecommerce.modules.user.repository;
 
-import com.riannegreiros.springecommerce.entity.Role;
+import com.riannegreiros.springecommerce.modules.user.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,6 +1,6 @@
 package com.riannegreiros.springecommerce.security;
 
-import com.riannegreiros.springecommerce.utils.JWTConstants;
+import com.riannegreiros.springecommerce.modules.user.JWTConstants;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -42,8 +42,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().disable();
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.authorizeRequests().antMatchers("/api/image/**").permitAll();
         http.authorizeRequests().antMatchers("/api/user/**").hasAuthority("Admin");
+        http.authorizeRequests().antMatchers("/api/categories/**").hasAnyAuthority("Admin", "Editor");
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user/token/**").permitAll();
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);

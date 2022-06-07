@@ -1,7 +1,7 @@
-package com.riannegreiros.springecommerce.repositoryTests;
+package com.riannegreiros.springecommerce.modules.user.repositoryTests;
 
-import com.riannegreiros.springecommerce.entity.Role;
-import com.riannegreiros.springecommerce.repository.RoleRepository;
+import com.riannegreiros.springecommerce.modules.user.entity.Role;
+import com.riannegreiros.springecommerce.modules.user.repository.RoleRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

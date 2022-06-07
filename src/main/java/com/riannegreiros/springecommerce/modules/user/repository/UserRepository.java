@@ -1,6 +1,6 @@
-package com.riannegreiros.springecommerce.repository;
+package com.riannegreiros.springecommerce.modules.user.repository;
 
-import com.riannegreiros.springecommerce.entity.User;
+import com.riannegreiros.springecommerce.modules.user.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

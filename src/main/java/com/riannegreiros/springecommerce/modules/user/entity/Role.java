@@ -1,4 +1,4 @@
-package com.riannegreiros.springecommerce.entity;
+package com.riannegreiros.springecommerce.modules.user.entity;
 
 import javax.persistence.*;
 import java.util.UUID;

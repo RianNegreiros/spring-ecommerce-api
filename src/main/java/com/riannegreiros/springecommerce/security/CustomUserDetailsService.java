@@ -1,7 +1,7 @@
 package com.riannegreiros.springecommerce.security;
 
-import com.riannegreiros.springecommerce.entity.User;
-import com.riannegreiros.springecommerce.repository.UserRepository;
+import com.riannegreiros.springecommerce.modules.user.entity.User;
+import com.riannegreiros.springecommerce.modules.user.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

@@ -1,4 +1,4 @@
-package com.riannegreiros.springecommerce.securityTests;
+package com.riannegreiros.springecommerce.modules.user.securityTests;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
