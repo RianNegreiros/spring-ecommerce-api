@@ -35,4 +35,13 @@ public class CategoryServiceImpl implements CategoryService {
                 categories.getTotalPages(),
                 categories.isLast());
     }
+
+    @Override
+    public Category save(Category category) {
+        Category categoryExists = categoryRepository.findByName(category.getName());
+        if (categoryExists != null) {
+            throw new Error("Category already exists!");
+        }
+        return categoryRepository.save(category);
+    }
 }
