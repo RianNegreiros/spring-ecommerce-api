@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -72,6 +73,12 @@ public class CategoryServiceImpl implements CategoryService {
         categoryExist.setChildren(category.getChildren());
 
         return categoryRepository.save(categoryExist);
+    }
+
+    @Override
+    public void delete(Long id) {
+        Category categoryExist = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("category", "id", id.toString()));
+        categoryRepository.deleteById(categoryExist.getId());
     }
 
     @Override
