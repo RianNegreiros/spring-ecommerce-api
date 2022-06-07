@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -40,7 +39,7 @@ public class CategoryController {
     }
 
     @PostMapping("/image/{id}")
-    public ResponseEntity<String> saveImage(@RequestParam("image") MultipartFile multipartFile, @PathVariable(name = "id") UUID id) throws IOException {
+    public ResponseEntity<String> saveImage(@RequestParam("image") MultipartFile multipartFile, @PathVariable(name = "id") Long id) throws IOException {
         categoryService.saveImage(multipartFile, id);
         return new ResponseEntity<>("Image has been saved successfully", HttpStatus.CREATED);
     }

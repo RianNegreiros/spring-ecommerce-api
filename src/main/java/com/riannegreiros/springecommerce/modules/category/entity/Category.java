@@ -3,14 +3,13 @@ package com.riannegreiros.springecommerce.modules.category.entity;
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @Table(name = "categories")
 public class Category {
     @Id
-    @GeneratedValue
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @Column(nullable = false, unique = true)
     private String name;
     @Column(nullable = false, unique = true)
@@ -35,11 +34,11 @@ public class Category {
         this.parent = parent;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
