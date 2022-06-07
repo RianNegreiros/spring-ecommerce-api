@@ -32,4 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 
-/src/main/java/com/riannegreiros/springecommerce/utils/JWTConstants.java
+/src/main/java/com/riannegreiros/springecommerce/modules/user/utils/JWTConstants.java
