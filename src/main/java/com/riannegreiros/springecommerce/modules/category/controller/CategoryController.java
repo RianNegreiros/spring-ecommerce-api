@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @RestController
@@ -45,6 +46,13 @@ public class CategoryController {
             @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
     ) {
         return categoryService.findAll(page, size, sortBy, sortDir);
+    }
+
+    @GetMapping("/csv")
+    public void usersInCSV(HttpServletResponse servletResponse) throws IOException {
+        servletResponse.setContentType("text/csv");
+        servletResponse.addHeader("Content-Disposition","attachment; filename=\"categories.csv\"");
+        categoryService.writeCategoriesToCSV(servletResponse.getWriter());
     }
 
     @PostMapping()

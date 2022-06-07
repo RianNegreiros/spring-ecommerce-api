@@ -6,12 +6,15 @@ import com.riannegreiros.springecommerce.modules.category.service.CategoryServic
 import com.riannegreiros.springecommerce.modules.user.exception.ResourceNotFoundException;
 import com.riannegreiros.springecommerce.utils.FileUploadUtil;
 import com.riannegreiros.springecommerce.utils.FindAllResponse;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.Writer;
 import java.util.List;
 
 @Service
@@ -65,6 +68,18 @@ public class CategoryServiceImpl implements CategoryService {
                 categoryPage.getTotalElements(),
                 categoryPage.getTotalPages(),
                 categoryPage.isLast());
+    }
+
+    @Override
+    public void writeCategoriesToCSV(Writer writer) throws IOException {
+        List<Category> categoryList = categoryRepository.findAll();
+        try (CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT.withHeader("ID", "Name"))) {
+            for (Category category : categoryList) {
+                csvPrinter.printRecord(category.getId(), category.getName());
+            }
+        } catch (IOException ex) {
+            throw new IOException("Could not save file." + ex);
+        }
     }
 
     @Override
