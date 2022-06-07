@@ -82,4 +82,9 @@ public class Category {
     public void setChildren(Set<Category> children) {
         this.children = children;
     }
+
+    public void addSubCategory(String name, Category parent) {
+        Category category = new Category(name, parent);
+        this.children.add(category);
+    }
 }
