@@ -85,4 +85,10 @@ public class Category {
     public void setChildren(Set<Category> children) {
         this.children = children;
     }
+
+    @Transient
+    public String getImagePath() {
+        if (image == null || id == null) return null;
+        return "/category-images/" + id + "/" + image;
+    }
 }

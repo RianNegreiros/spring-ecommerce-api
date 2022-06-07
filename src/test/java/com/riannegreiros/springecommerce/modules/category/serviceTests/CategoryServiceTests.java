@@ -148,22 +148,4 @@ public class CategoryServiceTests {
         assertThat(capturedValue.getPageSize()).isEqualTo(10);
         assertThat(capturedValue.getPageNumber()).isEqualTo(0);
     }
-
-    @Test
-    public void testDeleteCategory() {
-        Category category = new Category("any_category");
-        category.setId(1L);
-        given(categoryRepository.findById(any()))
-                .willReturn(Optional.of(category));
-
-        categoryService.delete(category.getId());
-
-        ArgumentCaptor<Long> userArgumentCaptor = ArgumentCaptor.forClass(Long.class);
-
-        verify(categoryRepository).deleteById(userArgumentCaptor.capture());
-
-        Long capturedCategory = userArgumentCaptor.getValue();
-
-        assertThat(capturedCategory).isEqualTo(category.getId());
-    }
 }

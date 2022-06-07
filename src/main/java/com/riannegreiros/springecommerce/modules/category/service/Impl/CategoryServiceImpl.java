@@ -76,9 +76,10 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(Long id) throws IOException {
         Category categoryExist = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("category", "id", id.toString()));
-        categoryRepository.deleteById(categoryExist.getId());
+        FileUploadUtil.deleteFile(categoryExist.getImagePath());
+        categoryRepository.deleteById(id);
     }
 
     @Override
@@ -86,7 +87,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("category", "id", id.toString()));
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
         category.setImage(fileName);
-        String uploadDir = "categories-images/" + category.getId();
+        String uploadDir = "category-images/" + category.getId();
         FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
     }
 }

@@ -25,4 +25,12 @@ public class FileUploadUtil {
             throw new IOException("Could not save file: " + fileName, ex);
         }
     }
+
+    public static void deleteFile(String dir) throws IOException {
+        try {
+            Files.delete(Paths.get(dir));
+        } catch (IOException ex) {
+            throw new IOException("Could not delete file: " + dir, ex);
+        }
+    }
 }

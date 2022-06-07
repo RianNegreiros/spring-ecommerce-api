@@ -11,6 +11,6 @@ public interface CategoryService {
     FindAllResponse findAllRootCategories();
     Category save(Category category);
     Category update(Category category, Long id);
-    void delete(Long id);
+    void delete(Long id) throws IOException;
     void saveImage(MultipartFile multipartFile, Long id) throws IOException;
 }

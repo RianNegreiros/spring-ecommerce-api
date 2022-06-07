@@ -75,9 +75,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(UUID id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id.toString()));
-        userRepository.delete(user);
+    public void delete(UUID id) throws IOException {
+        User userExist = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id.toString()));
+        FileUploadUtil.deleteFile(userExist.getImagePath());
+        userRepository.deleteById(id);
     }
 
     @Override

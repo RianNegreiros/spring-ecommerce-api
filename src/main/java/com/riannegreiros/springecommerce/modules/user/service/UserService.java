@@ -12,7 +12,7 @@ public interface UserService {
     FindAllResponse findAll(Integer page, Integer size, String sortBy, String sortDir);
     User save(User user);
     User update(User user, UUID id);
-    void delete(UUID id);
+    void delete(UUID id) throws IOException;
 
     User findByEmail(String email);
     void writeUsersToCSV(Writer writer) throws IOException;
