@@ -103,4 +103,10 @@ public class User {
     public void removeRole(String name) {
         this.roles.removeIf(role -> role.getName().equalsIgnoreCase(name));
     }
+
+    @Transient
+    public String getImagePath() {
+        if (photo == null || id == null) return null;
+        return "/user-images/" + id + "/" + photo;
+    }
 }

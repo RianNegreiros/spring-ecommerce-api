@@ -105,11 +105,4 @@ public class UserServiceImpl implements UserService {
         String uploadDir = "user-images/" + user.getId();
         FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
     }
-
-    @Override
-    public String getImagePath(UUID id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id.toString()));
-
-        return "/user-images/" + id + "/" + user.getPhoto();
-    }
 }

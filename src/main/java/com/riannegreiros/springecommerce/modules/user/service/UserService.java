@@ -17,5 +17,4 @@ public interface UserService {
     User findByEmail(String email);
     void writeUsersToCSV(Writer writer) throws IOException;
     void saveImage(MultipartFile multipartFile, UUID id) throws IOException;
-    String getImagePath(UUID id);
 }

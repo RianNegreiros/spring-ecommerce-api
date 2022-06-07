@@ -56,11 +56,6 @@ public class UserController {
         userService.writeUsersToCSV(servletResponse.getWriter());
     }
 
-    @GetMapping("/image/{id}")
-    public String imagePath(@PathVariable(name = "id")UUID id) {
-        return userService.getImagePath(id);
-    }
-
     @GetMapping("/token")
     public void refresh(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
