@@ -48,4 +48,11 @@ public class CategoryController {
         categoryService.saveImage(multipartFile, id);
         return new ResponseEntity<>("Image has been saved successfully", HttpStatus.CREATED);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Category> update(@RequestBody Category category, @PathVariable(name = "id") Long id) {
+        Category updatedCategory = categoryService.update(category, id);
+
+        return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
+    }
 }

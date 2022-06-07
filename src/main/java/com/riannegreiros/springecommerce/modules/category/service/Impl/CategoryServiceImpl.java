@@ -3,6 +3,7 @@ package com.riannegreiros.springecommerce.modules.category.service.Impl;
 import com.riannegreiros.springecommerce.modules.category.entity.Category;
 import com.riannegreiros.springecommerce.modules.category.repository.CategoryRepository;
 import com.riannegreiros.springecommerce.modules.category.service.CategoryService;
+import com.riannegreiros.springecommerce.modules.user.entity.User;
 import com.riannegreiros.springecommerce.modules.user.exception.ResourceNotFoundException;
 import com.riannegreiros.springecommerce.utils.FileUploadUtil;
 import com.riannegreiros.springecommerce.utils.FindAllResponse;
@@ -59,6 +60,19 @@ public class CategoryServiceImpl implements CategoryService {
             throw new Error("Category already exists!");
         }
         return categoryRepository.save(category);
+    }
+
+    @Override
+    public Category update(Category category, Long id) {
+        Category categoryExist = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("category", "id", id.toString()));
+
+        categoryExist.setName(category.getName());
+        categoryExist.setAlias(category.getAlias());
+        categoryExist.setImage(category.getImage());
+        if(categoryExist.getParent() != null) categoryExist.setParent(category.getParent());
+        categoryExist.setChildren(category.getChildren());
+
+        return categoryRepository.save(categoryExist);
     }
 
     @Override

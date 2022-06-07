@@ -10,5 +10,6 @@ public interface CategoryService {
     FindAllResponse findAll(Integer page, Integer size, String sortBy, String sortDir);
     FindAllResponse findAllRootCategories();
     Category save(Category category);
+    Category update(Category category, Long id);
     void saveImage(MultipartFile multipartFile, Long id) throws IOException;
 }
