@@ -9,6 +9,7 @@ import java.io.IOException;
 public interface CategoryService {
     FindAllResponse findAll(Integer page, Integer size, String sortBy, String sortDir);
     FindAllResponse findAllRootCategories();
+    FindAllResponse findAllByKeyword(String keyword, Integer page, Integer size, String sortBy, String sortDir);
     Category save(Category category);
     Category update(Category category, Long id);
     void delete(Long id) throws IOException;

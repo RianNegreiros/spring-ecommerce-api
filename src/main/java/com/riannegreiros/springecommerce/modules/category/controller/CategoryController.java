@@ -22,6 +22,17 @@ public class CategoryController {
     }
 
     @GetMapping
+    public FindAllResponse findAllByKeyword(
+            @RequestParam(value = "keyword") String keyword,
+            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) Integer page,
+            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) Integer size,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+    ) {
+        return categoryService.findAllByKeyword(keyword, page, size, sortBy, sortDir);
+    }
+
+    @GetMapping
     public FindAllResponse findAllRoot() {
         return categoryService.findAllRootCategories();
     }
@@ -57,7 +68,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<String> delete(@PathVariable(name = "id") Long id) throws IOException {
         categoryService.delete(id);
         return new ResponseEntity<>("Category has been deleted successfully", HttpStatus.OK);
     }

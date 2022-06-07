@@ -13,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -44,6 +43,21 @@ public class CategoryServiceImpl implements CategoryService {
         List<Category> categories = categoryRepository.findAllRootCategories();
         Page<Category> categoryPage = new PageImpl<>(categories);
         List<Category> categoryList = categoryPage.getContent();
+
+        return new FindAllResponse(categoryList,
+                categoryPage.getNumber(),
+                categoryPage.getSize(),
+                categoryPage.getTotalElements(),
+                categoryPage.getTotalPages(),
+                categoryPage.isLast());
+    }
+
+    @Override
+    public FindAllResponse findAllByKeyword(String keyword, Integer page, Integer size, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Category> categoryPage = categoryRepository.findAllByKeyword(keyword, pageable);
+        List<Category> categoryList = categoryPage.toList();
 
         return new FindAllResponse(categoryList,
                 categoryPage.getNumber(),
