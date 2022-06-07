@@ -7,6 +7,10 @@ import com.riannegreiros.springecommerce.utils.FindAllResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -29,7 +33,15 @@ public class CategoryController {
     }
 
     @PostMapping()
-    public ResponseEntity<Category> save(@RequestBody Category category) {
-        return new ResponseEntity<>(categoryService.save(category), HttpStatus.CREATED);
+    public ResponseEntity<Category> save(@RequestBody Category category, @RequestParam(value = "image", required = false) MultipartFile multipartFile) throws IOException {
+        Category savedCategory = categoryService.save(category);
+        categoryService.saveImage(multipartFile, savedCategory.getId());
+        return new ResponseEntity<>(savedCategory, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/image/{id}")
+    public ResponseEntity<String> saveImage(@RequestParam("image") MultipartFile multipartFile, @PathVariable(name = "id") UUID id) throws IOException {
+        categoryService.saveImage(multipartFile, id);
+        return new ResponseEntity<>("Image has been saved successfully", HttpStatus.CREATED);
     }
 }
