@@ -10,7 +10,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -119,5 +124,28 @@ public class CategoryServiceTests {
         Category capturedCategory = categoryArgumentCaptor.getValue();
 
         assertThat(capturedCategory.getParent()).isNull();
+    }
+
+    @Test
+    public void testFindAllCategories() {
+        Category category = new Category("any_category");
+        Category category1 = new Category("any_category");
+        Category category2 = new Category("any_category");
+        List<Category> categoryList = Arrays.asList(category, category1, category2);
+        Page<Category> categoryPage = new PageImpl<>(categoryList);
+        given(categoryRepository.findAll(any(Pageable.class)))
+                .willReturn(categoryPage);
+
+        categoryService.findAll(0, 10, "name", "asc");
+
+        ArgumentCaptor<Pageable> valueArgumentCaptor = ArgumentCaptor.forClass(Pageable.class);
+
+        verify(categoryRepository).findAll(valueArgumentCaptor.capture());
+
+        Pageable capturedValue = valueArgumentCaptor.getValue();
+
+        assertThat(capturedValue).isInstanceOf(Pageable.class);
+        assertThat(capturedValue.getPageSize()).isEqualTo(10);
+        assertThat(capturedValue.getPageNumber()).isEqualTo(0);
     }
 }
