@@ -9,7 +9,7 @@ import com.riannegreiros.springecommerce.modules.user.entity.Role;
 import com.riannegreiros.springecommerce.modules.user.entity.User;
 import com.riannegreiros.springecommerce.modules.user.exception.APIException;
 import com.riannegreiros.springecommerce.modules.user.service.UserService;
-import com.riannegreiros.springecommerce.modules.user.utils.JWTConstants;
+import com.riannegreiros.springecommerce.modules.user.JWTConstants;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

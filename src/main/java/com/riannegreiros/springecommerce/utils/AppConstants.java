@@ -1,4 +1,4 @@
-package com.riannegreiros.springecommerce.modules.user.utils;
+package com.riannegreiros.springecommerce.utils;
 
 public class AppConstants {
     public static final String DEFAULT_PAGE_NUMBER = "0";

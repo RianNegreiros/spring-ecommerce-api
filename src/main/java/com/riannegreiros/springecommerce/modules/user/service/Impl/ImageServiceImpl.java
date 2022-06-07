@@ -4,7 +4,7 @@ import com.riannegreiros.springecommerce.modules.user.entity.User;
 import com.riannegreiros.springecommerce.modules.user.exception.ResourceNotFoundException;
 import com.riannegreiros.springecommerce.modules.user.repository.UserRepository;
 import com.riannegreiros.springecommerce.modules.user.service.ImageService;
-import com.riannegreiros.springecommerce.modules.user.utils.FileUploadUtil;
+import com.riannegreiros.springecommerce.utils.FileUploadUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;

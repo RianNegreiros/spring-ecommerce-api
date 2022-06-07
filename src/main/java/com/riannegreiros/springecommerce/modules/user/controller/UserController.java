@@ -2,8 +2,8 @@ package com.riannegreiros.springecommerce.modules.user.controller;
 
 import com.riannegreiros.springecommerce.modules.user.entity.User;
 import com.riannegreiros.springecommerce.modules.user.service.UserService;
-import com.riannegreiros.springecommerce.modules.user.utils.AppConstants;
-import com.riannegreiros.springecommerce.modules.user.utils.GetAllUsersResponse;
+import com.riannegreiros.springecommerce.utils.AppConstants;
+import com.riannegreiros.springecommerce.utils.FindAllResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +23,7 @@ public class UserController {
     }
 
     @GetMapping
-    public GetAllUsersResponse findAll(
+    public FindAllResponse findAll(
             @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) Integer page,
             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) Integer size,
             @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,

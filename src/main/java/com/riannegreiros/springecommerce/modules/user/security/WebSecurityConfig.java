@@ -1,6 +1,6 @@
 package com.riannegreiros.springecommerce.modules.user.security;
 
-import com.riannegreiros.springecommerce.modules.user.utils.JWTConstants;
+import com.riannegreiros.springecommerce.modules.user.JWTConstants;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

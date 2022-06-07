@@ -1,4 +1,4 @@
-package com.riannegreiros.springecommerce.modules.user.utils;
+package com.riannegreiros.springecommerce.utils;
 
 import org.springframework.web.multipart.MultipartFile;
 

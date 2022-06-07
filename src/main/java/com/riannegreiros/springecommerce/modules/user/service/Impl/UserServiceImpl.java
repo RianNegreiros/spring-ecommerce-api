@@ -4,7 +4,7 @@ import com.riannegreiros.springecommerce.modules.user.entity.User;
 import com.riannegreiros.springecommerce.modules.user.exception.ResourceNotFoundException;
 import com.riannegreiros.springecommerce.modules.user.repository.UserRepository;
 import com.riannegreiros.springecommerce.modules.user.service.UserService;
-import com.riannegreiros.springecommerce.modules.user.utils.GetAllUsersResponse;
+import com.riannegreiros.springecommerce.utils.FindAllResponse;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.springframework.data.domain.Page;
@@ -57,13 +57,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public GetAllUsersResponse findAll(Integer page, Integer size, String sortBy, String sortDir) {
+    public FindAllResponse findAll(Integer page, Integer size, String sortBy, String sortDir) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<User> users = userRepository.findAll(pageable);
         List<User> userList = users.getContent();
 
-        return new GetAllUsersResponse(userList,
+        return new FindAllResponse(userList,
                 users.getNumber(),
                 users.getSize(),
                 users.getTotalElements(),
