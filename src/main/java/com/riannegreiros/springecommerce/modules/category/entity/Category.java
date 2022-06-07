@@ -24,6 +24,15 @@ public class Category {
     @OneToMany(mappedBy = "parent")
     private Set<Category> children = new HashSet<>();
 
+    public Category() {
+    }
+
+    public Category(String name) {
+        this.name = name;
+        this.alias = name;
+        this.image = "default.png";
+    }
+
     public UUID getId() {
         return id;
     }
