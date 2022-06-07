@@ -76,7 +76,7 @@ public class CategoryServiceTests {
     }
 
     @Test
-    public void updateCategory() {
+    public void testUpdateCategory() {
         Category category = new Category("any_category");
         Category updateCategory = new Category();
         updateCategory.setName("updated_name");
@@ -97,5 +97,27 @@ public class CategoryServiceTests {
         assertThat(capturedCategory.getName()).isEqualTo(updateCategory.getName());
         assertThat(capturedCategory.getAlias()).isEqualTo(updateCategory.getAlias());
         assertThat(capturedCategory.getImage()).isEqualTo(updateCategory.getImage());
+    }
+
+    @Test
+    public void testRootCategoryStillNull() {
+        Category parentCategory = new Category("parent_category");
+        Category category = new Category("any_category");
+        Category updateCategory = new Category();
+        updateCategory.setName("updated_name");
+        updateCategory.setParent(parentCategory);
+
+        given(categoryRepository.findById(any()))
+                .willReturn(Optional.of(category));
+
+        categoryService.update(updateCategory, category.getId());
+
+        ArgumentCaptor<Category> categoryArgumentCaptor = ArgumentCaptor.forClass(Category.class);
+
+        verify(categoryRepository).save(categoryArgumentCaptor.capture());
+
+        Category capturedCategory = categoryArgumentCaptor.getValue();
+
+        assertThat(capturedCategory.getParent()).isNull();
     }
 }
