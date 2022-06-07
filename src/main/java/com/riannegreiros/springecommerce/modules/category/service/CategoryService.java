@@ -8,6 +8,7 @@ import java.io.IOException;
 
 public interface CategoryService {
     FindAllResponse findAll(Integer page, Integer size, String sortBy, String sortDir);
+    FindAllResponse findAllRootCategories();
     Category save(Category category);
     void saveImage(MultipartFile multipartFile, Long id) throws IOException;
 }

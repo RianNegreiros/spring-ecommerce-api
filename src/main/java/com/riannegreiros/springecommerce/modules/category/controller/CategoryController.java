@@ -21,8 +21,13 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
+    @GetMapping
+    public FindAllResponse findAllRoot() {
+        return categoryService.findAllRootCategories();
+    }
+
     @GetMapping()
-    public FindAllResponse listAll(
+    public FindAllResponse findAll(
             @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) Integer page,
             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) Integer size,
             @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,

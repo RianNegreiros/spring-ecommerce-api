@@ -6,10 +6,7 @@ import com.riannegreiros.springecommerce.modules.category.service.CategoryServic
 import com.riannegreiros.springecommerce.modules.user.exception.ResourceNotFoundException;
 import com.riannegreiros.springecommerce.utils.FileUploadUtil;
 import com.riannegreiros.springecommerce.utils.FindAllResponse;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,6 +36,20 @@ public class CategoryServiceImpl implements CategoryService {
                 categories.getTotalElements(),
                 categories.getTotalPages(),
                 categories.isLast());
+    }
+
+    @Override
+    public FindAllResponse findAllRootCategories() {
+        List<Category> categories = categoryRepository.findAllRootCategories();
+        Page<Category> categoryPage = new PageImpl<>(categories);
+        List<Category> categoryList = categoryPage.getContent();
+
+        return new FindAllResponse(categoryList,
+                categoryPage.getNumber(),
+                categoryPage.getSize(),
+                categoryPage.getTotalElements(),
+                categoryPage.getTotalPages(),
+                categoryPage.isLast());
     }
 
     @Override
