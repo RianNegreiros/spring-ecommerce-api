@@ -77,7 +77,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void saveImage(MultipartFile multipartFile, Long id) throws IOException {
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id.toString()));
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("category", "id", id.toString()));
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
         category.setImage(fileName);
         String uploadDir = "categories-images/" + category.getId();
