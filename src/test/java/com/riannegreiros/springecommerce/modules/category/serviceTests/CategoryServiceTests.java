@@ -42,11 +42,11 @@ public class CategoryServiceTests {
         Category category = new Category("any_category");
         categoryService.save(category);
 
-        ArgumentCaptor<Category> userArgumentCaptor = ArgumentCaptor.forClass(Category.class);
+        ArgumentCaptor<Category> categoryArgumentCaptor = ArgumentCaptor.forClass(Category.class);
 
-        verify(categoryRepository).save(userArgumentCaptor.capture());
+        verify(categoryRepository).save(categoryArgumentCaptor.capture());
 
-        Category capturedCategory = userArgumentCaptor.getValue();
+        Category capturedCategory = categoryArgumentCaptor.getValue();
 
         assertThat(capturedCategory).isEqualTo(category);
     }
@@ -57,11 +57,11 @@ public class CategoryServiceTests {
         Category subCategory = new Category("any_category", parentCategory);
         categoryService.save(subCategory);
 
-        ArgumentCaptor<Category> userArgumentCaptor = ArgumentCaptor.forClass(Category.class);
+        ArgumentCaptor<Category> categoryArgumentCaptor = ArgumentCaptor.forClass(Category.class);
 
-        verify(categoryRepository).save(userArgumentCaptor.capture());
+        verify(categoryRepository).save(categoryArgumentCaptor.capture());
 
-        Category capturedSubCategory = userArgumentCaptor.getValue();
+        Category capturedSubCategory = categoryArgumentCaptor.getValue();
 
         assertThat(capturedSubCategory).isEqualTo(subCategory);
     }
