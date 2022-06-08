@@ -57,7 +57,7 @@ public class BrandServiceImpl implements BrandService {
     public Brand save(Brand brand) {
         Brand brandExist = brandRepository.findByName(brand.getName());
         if (brandExist != null) {
-            throw new Error("Category already exists with this name: " + brand.getName());
+            throw new Error("Brand already exists with this name: " + brand.getName());
         }
         return brandRepository.save(brand);
     }

@@ -1,7 +1,6 @@
 package com.riannegreiros.springecommerce.modules.brand.repository;
 
 import com.riannegreiros.springecommerce.modules.brand.entity.Brand;
-import com.riannegreiros.springecommerce.modules.category.entity.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
