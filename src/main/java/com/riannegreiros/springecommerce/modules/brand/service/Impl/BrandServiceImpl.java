@@ -4,6 +4,7 @@ import com.riannegreiros.springecommerce.exception.ResourceNotFoundException;
 import com.riannegreiros.springecommerce.modules.brand.entity.Brand;
 import com.riannegreiros.springecommerce.modules.brand.repository.BrandRepository;
 import com.riannegreiros.springecommerce.modules.brand.service.BrandService;
+import com.riannegreiros.springecommerce.modules.category.entity.Category;
 import com.riannegreiros.springecommerce.utils.FindAllResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,7 +13,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BrandServiceImpl implements BrandService {
@@ -36,6 +36,21 @@ public class BrandServiceImpl implements BrandService {
                 brands.getTotalElements(),
                 brands.getTotalPages(),
                 brands.isLast());
+    }
+
+    @Override
+    public FindAllResponse findAllByKeyword(String keyword, Integer page, Integer size, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Brand> brandPage = brandRepository.findAllByKeyword(keyword, pageable);
+        List<Brand> brandList = brandPage.toList();
+
+        return new FindAllResponse(brandList,
+                brandPage.getNumber(),
+                brandPage.getSize(),
+                brandPage.getTotalElements(),
+                brandPage.getTotalPages(),
+                brandPage.isLast());
     }
 
     @Override

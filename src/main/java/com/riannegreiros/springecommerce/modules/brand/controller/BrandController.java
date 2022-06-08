@@ -28,6 +28,17 @@ public class BrandController {
         return brandService.findAll(page, size, sortBy, sortDir);
     }
 
+    @GetMapping
+    public FindAllResponse findAllByKeyword(
+            @RequestParam(value = "keyword") String keyword,
+            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) Integer page,
+            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) Integer size,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+    ) {
+        return brandService.findAllByKeyword(keyword, page, size, sortBy, sortDir);
+    }
+
     @PostMapping
     public ResponseEntity<Brand> save(@RequestBody Brand brand) {
         Brand savedBrand = brandService.save(brand);
