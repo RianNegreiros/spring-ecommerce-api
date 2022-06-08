@@ -33,4 +33,10 @@ public class BrandController {
         Brand savedBrand = brandService.save(brand);
         return new ResponseEntity<>(savedBrand, HttpStatus.CREATED);
     }
+
+    @PutMapping()
+    public ResponseEntity<Brand> update(@RequestBody Brand brand) {
+        brandService.update(brand);
+        return new ResponseEntity<>(brand, HttpStatus.OK);
+    }
 }
