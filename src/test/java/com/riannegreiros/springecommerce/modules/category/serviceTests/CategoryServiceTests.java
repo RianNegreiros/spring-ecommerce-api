@@ -3,7 +3,6 @@ package com.riannegreiros.springecommerce.modules.category.serviceTests;
 import com.riannegreiros.springecommerce.modules.category.entity.Category;
 import com.riannegreiros.springecommerce.modules.category.repository.CategoryRepository;
 import com.riannegreiros.springecommerce.modules.category.service.Impl.CategoryServiceImpl;
-import com.riannegreiros.springecommerce.modules.user.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

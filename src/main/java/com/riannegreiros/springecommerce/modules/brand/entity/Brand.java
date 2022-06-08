@@ -36,6 +36,10 @@ public class Brand {
         this.logo = "brand-logo.png";
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }
