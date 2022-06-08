@@ -49,7 +49,7 @@ public class CategoryController {
     }
 
     @GetMapping("/csv")
-    public void usersInCSV(HttpServletResponse servletResponse) throws IOException {
+    public void categoriesInCSV(HttpServletResponse servletResponse) throws IOException {
         servletResponse.setContentType("text/csv");
         servletResponse.addHeader("Content-Disposition","attachment; filename=\"categories.csv\"");
         categoryService.writeCategoriesToCSV(servletResponse.getWriter());
