@@ -60,4 +60,10 @@ public class BrandServiceImpl implements BrandService {
 
         return brandRepository.save(brandExist);
     }
+
+    @Override
+    public void delete(Long id) {
+        Brand brand = brandRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Brand", "Id", id.toString()));
+        brandRepository.delete(brand);
+    }
 }
