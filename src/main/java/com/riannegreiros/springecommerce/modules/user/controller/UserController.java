@@ -112,7 +112,8 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable(name = "id") UUID id) throws IOException {
+    public ResponseEntity<String> delete(@PathVariable(name = "id") UUID id) throws IOException {
         userService.delete(id);
+        return new ResponseEntity<>("User has been deleted successfully", HttpStatus.OK);
     }
 }

@@ -35,8 +35,9 @@ public class ProductController {
     }
 
     @PutMapping("/{id}/enabled/{status}")
-    public void updateEnabledStatus(@PathVariable(name = "id") Long id, @PathVariable(name = "status") Boolean status) {
+    public ResponseEntity<String> updateEnabledStatus(@PathVariable(name = "id") Long id, @PathVariable(name = "status") Boolean status) {
         productService.updateEnabledStatus(id, status);
+        return new ResponseEntity<>("Product status has been deleted successfully updated to: " + status, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
