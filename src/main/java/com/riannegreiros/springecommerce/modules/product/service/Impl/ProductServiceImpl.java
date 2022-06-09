@@ -11,10 +11,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 
 @Service
+@Transactional
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
@@ -58,5 +60,12 @@ public class ProductServiceImpl implements ProductService {
         product.setUpdatedTime(new Date());
 
         return productRepository.save(product);
+    }
+
+    @Override
+    public void updateEnabledStatus(Long id, boolean status) {
+        productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product", "ID", id.toString()));
+
+        productRepository.updateEnabledStatus(id, status);
     }
 }

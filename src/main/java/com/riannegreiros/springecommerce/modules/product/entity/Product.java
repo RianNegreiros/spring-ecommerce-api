@@ -31,10 +31,10 @@ public class Product {
     @Column(name = "updated_time")
     private Date updatedTime;
 
-    private boolean enabled;
+    private Boolean enabled;
 
     @Column
-    private boolean inStock;
+    private Boolean inStock;
 
     private Float cost;
     private Float price;
@@ -107,19 +107,19 @@ public class Product {
         this.updatedTime = updatedTime;
     }
 
-    public boolean isEnabled() {
+    public Boolean isEnabled() {
         return enabled;
     }
 
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
 
-    public boolean isInStock() {
+    public Boolean isInStock() {
         return inStock;
     }
 
-    public void setInStock(boolean inStock) {
+    public void setInStock(Boolean inStock) {
         this.inStock = inStock;
     }
 

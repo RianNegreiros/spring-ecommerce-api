@@ -33,4 +33,9 @@ public class ProductController {
         Product savedProduct = productService.save(product);
         return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
     }
+
+    @PutMapping("/{id}/enabled/{status}")
+    public void updateEnabledStatus(@PathVariable(name = "id") Long id, @PathVariable(name = "status") Boolean status) {
+        productService.updateEnabledStatus(id, status);
+    }
 }
