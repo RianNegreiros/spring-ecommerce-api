@@ -100,4 +100,19 @@ public class ProductServiceImpl implements ProductService {
             }
         }
     }
+
+    @Override
+    public void saveProductDetails(String[] detailNames, String[] detailValues, Long id) {
+        Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id.toString()));
+        if (detailNames.length <= 0 || detailValues.length <= 0) return;
+
+        for (int i = 0; i < detailNames.length; i++) {
+            String name = detailNames[i];
+            String value = detailValues[i];
+
+            if (!name.isBlank() && !value.isBlank()) product.addDetail(name, value);
+        }
+    }
+
+
 }

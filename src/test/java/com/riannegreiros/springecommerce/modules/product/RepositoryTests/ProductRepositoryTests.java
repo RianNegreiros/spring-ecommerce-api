@@ -1,6 +1,7 @@
 package com.riannegreiros.springecommerce.modules.product.RepositoryTests;
 
 import com.riannegreiros.springecommerce.modules.product.entity.Product;
+import com.riannegreiros.springecommerce.modules.product.entity.ProductDetail;
 import com.riannegreiros.springecommerce.modules.product.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -82,13 +83,26 @@ public class ProductRepositoryTests {
 
     @Test
     public void testSaveImages() {
-        product.setMainImage("main-image.jpg");
-        product.addExtraImage("extra-image.png");
-        product.addExtraImage("extra-image1.png");
+        savedProduct.setMainImage("main-image.jpg");
+        savedProduct.addExtraImage("extra-image.png");
+        savedProduct.addExtraImage("extra-image1.png");
 
-        Product savedProduct = productRepository.save(product);
+        Product updatedProduct = productRepository.save(savedProduct);
 
-        assertThat(savedProduct.getImages()).isNotEmpty();
-        assertThat(savedProduct.getImages()).hasSize(2);
+        assertThat(updatedProduct.getImages()).isNotEmpty();
+        assertThat(updatedProduct.getImages()).hasSize(2);
+    }
+
+    @Test
+    public void testAddDetails() {
+        savedProduct.addDetail("any_name", "any_value");
+        savedProduct.addDetail("any_name", "any_value");
+        savedProduct.addDetail("any_name", "any_value");
+
+        Product updatedProduct = productRepository.save(savedProduct);
+
+        assertThat(updatedProduct.getDetails()).isNotEmpty();
+        assertThat(updatedProduct.getDetails()).hasSize(3);
+        assertThat(updatedProduct.getDetails()).hasAtLeastOneElementOfType(ProductDetail.class);
     }
 }
