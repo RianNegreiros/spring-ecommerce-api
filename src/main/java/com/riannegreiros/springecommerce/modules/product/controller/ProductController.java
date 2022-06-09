@@ -38,4 +38,10 @@ public class ProductController {
     public void updateEnabledStatus(@PathVariable(name = "id") Long id, @PathVariable(name = "status") Boolean status) {
         productService.updateEnabledStatus(id, status);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable(name = "id") Long id) {
+        productService.delete(id);
+        return new ResponseEntity<>("Product has been deleted successfully", HttpStatus.OK);
+    }
 }

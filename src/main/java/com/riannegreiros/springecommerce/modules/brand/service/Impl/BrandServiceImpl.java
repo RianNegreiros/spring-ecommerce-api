@@ -4,7 +4,6 @@ import com.riannegreiros.springecommerce.exception.ResourceNotFoundException;
 import com.riannegreiros.springecommerce.modules.brand.entity.Brand;
 import com.riannegreiros.springecommerce.modules.brand.repository.BrandRepository;
 import com.riannegreiros.springecommerce.modules.brand.service.BrandService;
-import com.riannegreiros.springecommerce.modules.category.entity.Category;
 import com.riannegreiros.springecommerce.utils.FindAllResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

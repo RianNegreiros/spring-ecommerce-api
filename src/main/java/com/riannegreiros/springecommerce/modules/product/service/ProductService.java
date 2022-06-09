@@ -7,4 +7,5 @@ public interface ProductService {
     FindAllResponse findAll(Integer page, Integer size, String sortBy, String sortDir);
     Product save (Product product);
     void updateEnabledStatus(Long id, boolean status);
+    void delete(Long id);
 }

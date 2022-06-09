@@ -1,6 +1,7 @@
 package com.riannegreiros.springecommerce.modules.product.service.Impl;
 
 import com.riannegreiros.springecommerce.exception.ResourceNotFoundException;
+import com.riannegreiros.springecommerce.modules.brand.entity.Brand;
 import com.riannegreiros.springecommerce.modules.product.entity.Product;
 import com.riannegreiros.springecommerce.modules.product.repository.ProductRepository;
 import com.riannegreiros.springecommerce.modules.product.service.ProductService;
@@ -67,5 +68,11 @@ public class ProductServiceImpl implements ProductService {
         productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product", "ID", id.toString()));
 
         productRepository.updateEnabledStatus(id, status);
+    }
+
+    @Override
+    public void delete(Long id) {
+        Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Brand", "ID", id.toString()));
+        productRepository.delete(product);
     }
 }
