@@ -90,6 +90,12 @@ public class CategoryServiceImpl implements CategoryService {
         if (categoryExists != null) {
             throw new Error("Category already exists with this name: " + category.getName());
         }
+        Category parent = category.getParent();
+        if (parent != null) {
+            String allParentIds = parent.getAllParentIDs() == null ? "-" : parent.getAllParentIDs();
+            allParentIds += String.valueOf(parent.getId());
+            category.setAllParentIDs(allParentIds);
+        }
         return categoryRepository.save(category);
     }
 
