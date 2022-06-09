@@ -239,4 +239,12 @@ public class Product {
     public void addDetail(String name, String value) {
         this.details.add(new ProductDetail(name, value, this));
     }
+
+    public boolean containsImageName(String imageName) {
+
+        for (ProductImage image : images) {
+            if (image.getName().equals(imageName)) return true;
+        }
+        return false;
+    }
 }

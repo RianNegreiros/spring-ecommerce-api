@@ -39,12 +39,15 @@ public class ProductController {
             @RequestParam(value = "image",required = false) MultipartFile multipartFile,
             @RequestParam(value = "extraImages", required = false) MultipartFile[] multipartFiles,
             @RequestParam(value = "detailNames", required = false) String[] detailNames,
-            @RequestParam(value = "detailValues", required = false) String[] detailValues
+            @RequestParam(value = "detailValues", required = false) String[] detailValues,
+            @RequestParam(value = "imageIDs", required = false) String[] imageIDs,
+            @RequestParam(value = "imageNames", required = false) String[] imageNames
     ) throws IOException {
-        Product savedProduct = productService.save(product);
         if (!multipartFile.isEmpty()) productService.saveImage(multipartFile, product.getId());
         if (multipartFiles.length > 0) productService.saveExtraImages(multipartFiles, product.getId());
         productService.saveProductDetails(detailNames, detailValues, product);
+        productService.saveExistingImageNames(imageIDs, imageNames, product);
+        Product savedProduct = productService.save(product);
         return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
     }
 

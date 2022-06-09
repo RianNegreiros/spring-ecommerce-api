@@ -2,6 +2,7 @@ package com.riannegreiros.springecommerce.modules.product.service.Impl;
 
 import com.riannegreiros.springecommerce.exception.ResourceNotFoundException;
 import com.riannegreiros.springecommerce.modules.product.entity.Product;
+import com.riannegreiros.springecommerce.modules.product.entity.ProductImage;
 import com.riannegreiros.springecommerce.modules.product.repository.ProductRepository;
 import com.riannegreiros.springecommerce.modules.product.service.ProductService;
 import com.riannegreiros.springecommerce.utils.FileUploadUtil;
@@ -17,7 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -95,7 +98,7 @@ public class ProductServiceImpl implements ProductService {
         for (MultipartFile multipartFile : multipartFiles) {
             if (!multipartFile.isEmpty()) {
                 String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-                product.addExtraImage(fileName);
+                if (!product.containsImageName(fileName)) product.addExtraImage(fileName);
                 FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
             }
         }
@@ -113,5 +116,19 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
+    @Override
+    public void saveExistingImageNames(String[] imageIDs, String[] imageNames, Product product) {
+        if (imageIDs.length <= 0 || imageNames.length <= 0) return;
 
+        Set<ProductImage> images = new HashSet<>();
+
+        for (int i = 0; i < imageIDs.length; i++) {
+            Long id = Long.parseLong(imageIDs[i]);
+            String name = imageNames[i];
+
+            images.add(new ProductImage(id, name, product));
+        }
+
+        product.setImages(images);
+    }
 }
