@@ -5,16 +5,22 @@ import com.riannegreiros.springecommerce.modules.brand.entity.Brand;
 import com.riannegreiros.springecommerce.modules.product.entity.Product;
 import com.riannegreiros.springecommerce.modules.product.repository.ProductRepository;
 import com.riannegreiros.springecommerce.modules.product.service.ProductService;
+import com.riannegreiros.springecommerce.modules.user.entity.User;
+import com.riannegreiros.springecommerce.utils.FileUploadUtil;
 import com.riannegreiros.springecommerce.utils.FindAllResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -74,5 +80,14 @@ public class ProductServiceImpl implements ProductService {
     public void delete(Long id) {
         Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Brand", "ID", id.toString()));
         productRepository.delete(product);
+    }
+
+    @Override
+    public void saveImage(MultipartFile multipartFile, Long id) throws IOException {
+        Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id.toString()));
+        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        product.setMainImage(fileName);
+        String uploadDir = "/product-images/" + product.getId();
+        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
     }
 }

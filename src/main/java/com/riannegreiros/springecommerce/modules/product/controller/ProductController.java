@@ -7,6 +7,10 @@ import com.riannegreiros.springecommerce.utils.FindAllResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/products")
@@ -29,9 +33,16 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> save(@RequestBody Product product) {
+    public ResponseEntity<Product> save(@RequestBody Product product, @RequestParam(value = "image",required = false) MultipartFile multipartFile) throws IOException {
         Product savedProduct = productService.save(product);
+        if (!multipartFile.isEmpty()) productService.saveImage(multipartFile, product.getId());
         return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/image/{id}")
+    public ResponseEntity<String> save(@RequestParam("image") MultipartFile multipartFile, @PathVariable(name = "id") Long id) throws IOException {
+        productService.saveImage(multipartFile, id);
+        return new ResponseEntity<>("Image has been saved successfully", HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}/enabled/{status}")

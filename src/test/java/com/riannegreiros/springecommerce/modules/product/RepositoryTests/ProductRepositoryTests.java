@@ -79,4 +79,16 @@ public class ProductRepositoryTests {
 
         assertThat(findProduct).isFalse();
     }
+
+    @Test
+    public void testSaveImages() {
+        product.setMainImage("main-image.jpg");
+        product.addExtraImage("extra-image.png");
+        product.addExtraImage("extra-image1.png");
+
+        Product savedProduct = productRepository.save(product);
+
+        assertThat(savedProduct.getImages()).isNotEmpty();
+        assertThat(savedProduct.getImages()).hasSize(2);
+    }
 }
