@@ -16,6 +16,9 @@ public class Category {
     private String alias;
     private String image;
 
+    @Column(name = "all_parent_ids", nullable = false)
+    private String allParentIDs;
+
     @OneToOne
     @JoinColumn(name = "parent_id")
     private Category parent;
@@ -90,5 +93,13 @@ public class Category {
     public String getImagePath() {
         if (image == null || id == null) return null;
         return "/category-images/" + id + "/" + image;
+    }
+
+    public String getAllParentIDs() {
+        return allParentIDs;
+    }
+
+    public void setAllParentIDs(String allParentIDs) {
+        this.allParentIDs = allParentIDs;
     }
 }

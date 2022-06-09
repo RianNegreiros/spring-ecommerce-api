@@ -13,11 +13,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 
 @Service
+@Transactional
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
@@ -87,6 +89,12 @@ public class CategoryServiceImpl implements CategoryService {
         Category categoryExists = categoryRepository.findByName(category.getName());
         if (categoryExists != null) {
             throw new Error("Category already exists with this name: " + category.getName());
+        }
+        Category parent = category.getParent();
+        if (parent != null) {
+            String allParentIds = parent.getAllParentIDs() == null ? "-" : parent.getAllParentIDs();
+            allParentIds += String.valueOf(parent.getId());
+            category.setAllParentIDs(allParentIds);
         }
         return categoryRepository.save(category);
     }

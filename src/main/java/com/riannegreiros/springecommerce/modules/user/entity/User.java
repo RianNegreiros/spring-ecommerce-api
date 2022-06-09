@@ -109,4 +109,12 @@ public class User {
         if (photo == null || id == null) return null;
         return "/user-images/" + id + "/" + photo;
     }
+
+    public boolean hasRole(String roleName) {
+
+        for (Role role : roles) {
+            if (role.getName().equals(roleName)) return true;
+        }
+        return false;
+    }
 }

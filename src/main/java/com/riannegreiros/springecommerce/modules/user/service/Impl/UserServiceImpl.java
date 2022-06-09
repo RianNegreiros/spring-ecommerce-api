@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
@@ -24,6 +25,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private final PasswordEncoder passwordEncoder;
@@ -103,7 +105,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id.toString()));
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
         user.setPhoto(fileName);
-        String uploadDir = "user-images/" + user.getId();
+        String uploadDir = "/user-images/" + user.getId();
         FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
     }
 }

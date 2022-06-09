@@ -43,8 +43,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers("/api/user/**").hasAuthority("Admin");
-        http.authorizeRequests().antMatchers("/api/categories/**").hasAnyAuthority("Admin", "Editor");
-        http.authorizeRequests().antMatchers("/api/brands/**").hasAnyAuthority("Admin", "Editor");
+        http.authorizeRequests().antMatchers("/api/categories/**", "/api/brands/**").hasAnyAuthority("Admin", "Editor");
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/products/**").hasAnyAuthority("Admin", "Editor", "Salesperson", "Shipper");
+        http.authorizeRequests().antMatchers(HttpMethod.POST , "/api/products/**").hasAnyAuthority("Admin", "Editor");
+        http.authorizeRequests().antMatchers(HttpMethod.PUT , "/api/products/**").hasAnyAuthority("Admin", "Editor", "Salesperson");
+        http.authorizeRequests().antMatchers(HttpMethod.DELETE , "/api/products/**").hasAnyAuthority("Admin", "Editor");
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user/token/**").permitAll();
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);

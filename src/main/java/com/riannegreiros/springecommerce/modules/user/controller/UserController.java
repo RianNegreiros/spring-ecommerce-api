@@ -94,7 +94,7 @@ public class UserController {
     @PostMapping()
     public ResponseEntity<User> save(@RequestBody User user, @RequestParam(value = "image", required = false) MultipartFile multipartFile) throws IOException {
         User savedUser = userService.save(user);
-        userService.saveImage(multipartFile, savedUser.getId());
+        if (!multipartFile.isEmpty()) userService.saveImage(multipartFile, savedUser.getId());
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
@@ -112,7 +112,8 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable(name = "id") UUID id) throws IOException {
+    public ResponseEntity<String> delete(@PathVariable(name = "id") UUID id) throws IOException {
         userService.delete(id);
+        return new ResponseEntity<>("User has been deleted successfully", HttpStatus.OK);
     }
 }
