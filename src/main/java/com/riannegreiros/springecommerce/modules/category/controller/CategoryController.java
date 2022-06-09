@@ -24,28 +24,19 @@ public class CategoryController {
 
     @GetMapping
     public FindAllResponse findAllByKeyword(
-            @RequestParam(value = "keyword") String keyword,
+            @RequestParam(value = "keyword", required = false) String keyword,
             @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) Integer page,
             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) Integer size,
             @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
             @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
     ) {
+        if (keyword.isBlank()) return categoryService.findAll(page, size, sortBy, sortDir);
         return categoryService.findAllByKeyword(keyword, page, size, sortBy, sortDir);
     }
 
-    @GetMapping
+    @GetMapping("/rootCategories")
     public FindAllResponse findAllRoot() {
         return categoryService.findAllRootCategories();
-    }
-
-    @GetMapping()
-    public FindAllResponse findAll(
-            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) Integer page,
-            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) Integer size,
-            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
-            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
-    ) {
-        return categoryService.findAll(page, size, sortBy, sortDir);
     }
 
     @GetMapping("/csv")
