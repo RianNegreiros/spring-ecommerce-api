@@ -1,6 +1,7 @@
 package com.riannegreiros.springecommerce.modules.product.service.Impl;
 
 import com.riannegreiros.springecommerce.exception.ResourceNotFoundException;
+import com.riannegreiros.springecommerce.modules.category.entity.Category;
 import com.riannegreiros.springecommerce.modules.product.entity.Product;
 import com.riannegreiros.springecommerce.modules.product.entity.ProductImage;
 import com.riannegreiros.springecommerce.modules.product.repository.ProductRepository;
@@ -45,6 +46,21 @@ public class ProductServiceImpl implements ProductService {
                 products.getTotalElements(),
                 products.getTotalPages(),
                 products.isLast());
+    }
+
+    @Override
+    public FindAllResponse findAllByKeyword(String keyword, Integer page, Integer size, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Product> productPage = productRepository.findAll(keyword, pageable);
+        List<Product> productList = productPage.toList();
+
+        return new FindAllResponse(productList,
+                productPage.getNumber(),
+                productPage.getSize(),
+                productPage.getTotalElements(),
+                productPage.getTotalPages(),
+                productPage.isLast());
     }
 
     @Override

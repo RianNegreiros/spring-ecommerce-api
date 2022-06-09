@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/products")
@@ -24,13 +23,15 @@ public class ProductController {
     }
 
     @GetMapping
-    public FindAllResponse findAll(
+    public FindAllResponse findAllByKeyword(
+            @RequestParam(value = "keyword", required = false) String keyword,
             @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) Integer page,
             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) Integer size,
             @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
             @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
     ) {
-        return productService.findAll(page, size, sortBy, sortDir);
+        if (keyword.isBlank()) return productService.findAll(page, size, sortBy, sortDir);
+        return productService.findAllByKeyword(keyword, page, size, sortBy, sortDir);
     }
 
     @PostMapping
