@@ -3,6 +3,7 @@ package com.riannegreiros.springecommerce.modules.product.controller;
 import com.riannegreiros.springecommerce.modules.product.entity.Product;
 import com.riannegreiros.springecommerce.modules.product.service.ProductService;
 import com.riannegreiros.springecommerce.utils.AppConstants;
+import com.riannegreiros.springecommerce.utils.FileUploadUtil;
 import com.riannegreiros.springecommerce.utils.FindAllResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,9 +34,14 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> save(@RequestBody Product product, @RequestParam(value = "image",required = false) MultipartFile multipartFile) throws IOException {
+    public ResponseEntity<Product> save(
+            @RequestBody Product product,
+            @RequestParam(value = "image",required = false) MultipartFile multipartFile,
+            @RequestParam(value = "extraImages", required = false) MultipartFile[] multipartFiles
+    ) throws IOException {
         Product savedProduct = productService.save(product);
         if (!multipartFile.isEmpty()) productService.saveImage(multipartFile, product.getId());
+        if (multipartFiles.length > 0) productService.saveExtraImages(multipartFiles, product.getId());
         return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
     }
 
@@ -52,8 +58,10 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<String> delete(@PathVariable(name = "id") Long id) throws IOException {
         productService.delete(id);
+        FileUploadUtil.deleteFile("/product-images/" + id);
+        FileUploadUtil.deleteFile("/product-images/" + id + "/extras");
         return new ResponseEntity<>("Product has been deleted successfully", HttpStatus.OK);
     }
 }

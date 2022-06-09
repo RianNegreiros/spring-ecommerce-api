@@ -12,4 +12,5 @@ public interface ProductService {
     void updateEnabledStatus(Long id, boolean status);
     void delete(Long id);
     void saveImage(MultipartFile multipartFile, Long id) throws IOException;
+    void saveExtraImages(MultipartFile[] multipartFiles, Long id) throws IOException;
 }
