@@ -1,5 +1,6 @@
 package com.riannegreiros.springecommerce.modules.product.service.Impl;
 
+import com.riannegreiros.springecommerce.exception.ResourceNotFoundException;
 import com.riannegreiros.springecommerce.modules.product.entity.Product;
 import com.riannegreiros.springecommerce.modules.product.repository.ProductRepository;
 import com.riannegreiros.springecommerce.modules.product.service.ProductService;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -34,5 +36,27 @@ public class ProductServiceImpl implements ProductService {
                 products.getTotalElements(),
                 products.getTotalPages(),
                 products.isLast());
+    }
+
+    @Override
+    public Product save(Product product) {
+        Product productExists = productRepository.findByName(product.getName());
+
+        if (productExists != null) {
+            throw new ResourceNotFoundException("Product", "Name", product.getName());
+        }
+
+        if (product.getAlias().isBlank()) {
+            String defaultAlias = product.getName().replaceAll(" ",  "-");
+            product.setAlias(defaultAlias);
+        }
+
+        product.setAlias(product.getName().replaceAll(" ",  "-"));
+        product.setEnabled(true);
+        product.setInStock(true);
+        product.setCreatedTime(new Date());
+        product.setUpdatedTime(new Date());
+
+        return productRepository.save(product);
     }
 }

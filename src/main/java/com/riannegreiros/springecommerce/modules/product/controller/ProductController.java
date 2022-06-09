@@ -1,12 +1,12 @@
 package com.riannegreiros.springecommerce.modules.product.controller;
 
+import com.riannegreiros.springecommerce.modules.product.entity.Product;
 import com.riannegreiros.springecommerce.modules.product.service.ProductService;
 import com.riannegreiros.springecommerce.utils.AppConstants;
 import com.riannegreiros.springecommerce.utils.FindAllResponse;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/products")
@@ -26,5 +26,11 @@ public class ProductController {
             @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
     ) {
         return productService.findAll(page, size, sortBy, sortDir);
+    }
+
+    @PostMapping
+    public ResponseEntity<Product> save(@RequestBody Product product) {
+        Product savedProduct = productService.save(product);
+        return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
     }
 }
