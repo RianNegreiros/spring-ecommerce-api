@@ -94,7 +94,7 @@ public class UserController {
     @PostMapping()
     public ResponseEntity<User> save(@RequestBody User user, @RequestParam(value = "image", required = false) MultipartFile multipartFile) throws IOException {
         User savedUser = userService.save(user);
-        userService.saveImage(multipartFile, savedUser.getId());
+        if (!multipartFile.isEmpty()) userService.saveImage(multipartFile, savedUser.getId());
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 

@@ -105,7 +105,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id.toString()));
         String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
         user.setPhoto(fileName);
-        String uploadDir = "user-images/" + user.getId();
+        String uploadDir = "/user-images/" + user.getId();
         FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
     }
 }
