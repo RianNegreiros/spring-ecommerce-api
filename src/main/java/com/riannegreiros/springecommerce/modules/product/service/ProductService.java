@@ -13,5 +13,5 @@ public interface ProductService {
     void delete(Long id);
     void saveImage(MultipartFile multipartFile, Long id) throws IOException;
     void saveExtraImages(MultipartFile[] multipartFiles, Long id) throws IOException;
-    void saveProductDetails(String[] detailNames, String[] detailValues, Long id);
+    void saveProductDetails(String[] detailNames, String[] detailValues, Product product);
 }
