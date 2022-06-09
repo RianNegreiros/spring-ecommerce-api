@@ -147,4 +147,14 @@ public class ProductServiceImpl implements ProductService {
 
         product.setImages(images);
     }
+
+    @Override
+    public void saveProductPrice(Product product) {
+        Product productExist = productRepository.findById(product.getId()).orElseThrow(() -> new ResourceNotFoundException("user", "id", product.getId().toString()));
+        productExist.setCost(product.getCost());
+        productExist.setPrice(product.getPrice());
+        productExist.setDiscountPercent(product.getDiscountPercent());
+
+        productRepository.save(productExist);
+    }
 }
