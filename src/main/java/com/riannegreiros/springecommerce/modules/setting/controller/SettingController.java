@@ -34,9 +34,4 @@ public class SettingController {
         List<Currency> currencyList = settingService.findAllCurrencies();
         return new ResponseEntity<>(currencyList, HttpStatus.OK);
     }
-    @GetMapping("/states")
-    public ResponseEntity<List<State>> findAllStates() {
-        List<State> countryList = settingService.findAllStates();
-        return new ResponseEntity<>(countryList, HttpStatus.OK);
-    }
 }
