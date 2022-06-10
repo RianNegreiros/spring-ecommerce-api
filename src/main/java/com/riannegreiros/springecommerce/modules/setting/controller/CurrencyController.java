@@ -29,4 +29,10 @@ public class CurrencyController {
         Currency savedCurrency = currencyService.save(currency);
         return new ResponseEntity<>(savedCurrency, HttpStatus.CREATED);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable(name = "id") Integer id) {
+        currencyService.delete(id);
+        return new ResponseEntity<>("Currency has been successfully deleted", HttpStatus.OK);
+    }
 }
