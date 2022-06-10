@@ -1,4 +1,4 @@
-package com.riannegreiros.springecommerce.modules.setting;
+package com.riannegreiros.springecommerce.modules.setting.Country;
 
 import com.riannegreiros.springecommerce.modules.setting.entity.Country;
 import com.riannegreiros.springecommerce.modules.setting.repository.CountryRepository;
