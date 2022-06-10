@@ -36,6 +36,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Product findByAlias(String alias) {
+        Product product = productRepository.findByAliasEnabled(alias);
+
+        if (product == null) throw new ResourceNotFoundException("Product", "Alias", alias);
+        if (!product.isEnabled()) throw new Error("Product is not enabled");
+
+        return product;
+    }
+
+    @Override
     public FindAllResponse findAll(Integer page, Integer size, String sortBy, String sortDir) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(page, size, sort);

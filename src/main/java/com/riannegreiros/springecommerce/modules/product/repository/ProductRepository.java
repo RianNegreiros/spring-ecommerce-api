@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
     Product findByName(String name);
+    @Query("SELECT p FROM Product p WHERE p.enabled = true AND p.alias = ?1")
+    Product findByAliasEnabled(String alias);
     @Query("UPDATE Product p SET p.enabled = ?2 WHERE p.id = ?1")
     @Modifying
     void updateEnabledStatus(Long id, boolean enabled);

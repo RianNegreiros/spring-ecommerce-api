@@ -24,6 +24,12 @@ public class ProductController {
         this.productService = productService;
     }
 
+    @GetMapping("/{alias}")
+    public ResponseEntity<Product> findProduct(@PathVariable(name = "alias") String alias) {
+        Product product = productService.findByAlias(alias);
+        return new ResponseEntity<>(product, HttpStatus.FOUND);
+    }
+
     @GetMapping
     public FindAllResponse findAllByKeyword(
             @RequestParam(value = "keyword", required = false) String keyword,
