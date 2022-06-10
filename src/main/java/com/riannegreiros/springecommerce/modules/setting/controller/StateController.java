@@ -29,4 +29,10 @@ public class StateController {
         State savedState = stateService.save(state);
         return new ResponseEntity<>(savedState, HttpStatus.CREATED);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable(name = "id") Integer id) {
+        stateService.delete(id);
+        return new ResponseEntity<>("State has been deleted successfully", HttpStatus.OK);
+    }
 }

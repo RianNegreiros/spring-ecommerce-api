@@ -1,5 +1,6 @@
 package com.riannegreiros.springecommerce.modules.setting.service.Impl;
 
+import com.riannegreiros.springecommerce.exception.ResourceNotFoundException;
 import com.riannegreiros.springecommerce.modules.setting.entity.State;
 import com.riannegreiros.springecommerce.modules.setting.repository.StateRepository;
 import com.riannegreiros.springecommerce.modules.setting.service.StateService;
@@ -28,5 +29,12 @@ public class StateServiceImpl implements StateService {
         if (stateExists != null) throw new Error("State already exist by the name: " + stateExists.getName());
 
         return stateRepository.save(state);
+    }
+
+    @Override
+    public void delete(Integer id) {
+        State stateExist = stateRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("State", "ID", id.toString()));
+
+        stateRepository.delete(stateExist);
     }
 }
