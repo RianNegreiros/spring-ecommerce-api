@@ -1,9 +1,6 @@
 package com.riannegreiros.springecommerce.modules.setting.controller;
 
-import com.riannegreiros.springecommerce.modules.setting.entity.Country;
-import com.riannegreiros.springecommerce.modules.setting.entity.Currency;
 import com.riannegreiros.springecommerce.modules.setting.entity.Setting;
-import com.riannegreiros.springecommerce.modules.setting.entity.State;
 import com.riannegreiros.springecommerce.modules.setting.service.SettingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,11 +24,5 @@ public class SettingController {
     public ResponseEntity<List<Setting>> findAllSettings() {
         List<Setting> settingList = settingService.findAllSettings();
         return new ResponseEntity<>(settingList, HttpStatus.OK);
-    }
-
-    @GetMapping("/currencies")
-    public ResponseEntity<List<Currency>> findAllCurrencies() {
-        List<Currency> currencyList = settingService.findAllCurrencies();
-        return new ResponseEntity<>(currencyList, HttpStatus.OK);
     }
 }
