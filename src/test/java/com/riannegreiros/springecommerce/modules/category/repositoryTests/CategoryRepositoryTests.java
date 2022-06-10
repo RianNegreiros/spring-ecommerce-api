@@ -56,4 +56,41 @@ public class CategoryRepositoryTests {
 
         assertThat(findCategory.getId()).isEqualTo(category.getId());
     }
+
+    @Test
+    public void testFindCategory() {
+        Category category = new Category("any category");
+        category.setAlias("any-category");
+        category.setEnabled(true);
+        categoryRepository.save(category);
+        Category findCategory = categoryRepository.findByAliasEnabled("any-category");
+
+        assertThat(findCategory).isNotNull();
+        assertThat(findCategory.getEnabled()).isTrue();
+    }
+
+    @Test
+    public void testFindAllByEnabled() {
+        Category category = new Category("any category");
+        category.setAlias("any-category");
+        category.setEnabled(true);
+        categoryRepository.save(category);
+
+        Category category1 = new Category("any category1");
+        category1.setAlias("any-category1");
+        category1.setEnabled(true);
+        categoryRepository.save(category1);
+
+        Category category2 = new Category("any category2");
+        category2.setAlias("any-category2");
+        category2.setEnabled(false);
+        categoryRepository.save(category2);
+
+        List<Category> categoryList = categoryRepository.findAllByEnabled();
+
+        assertThat(categoryList).isNotEmpty();
+        assertThat(categoryList).hasSize(2);
+        assertThat(categoryList).contains(category, category1);
+        assertThat(categoryList).doesNotContain(category2);
+    }
 }

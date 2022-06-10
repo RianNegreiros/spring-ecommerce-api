@@ -29,6 +29,16 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public Category findCategory(String alias) {
+        Category category = categoryRepository.findByAliasEnabled(alias);
+
+        if (category == null) throw new ResourceNotFoundException("Category", "Alias", alias);
+        if (!category.getEnabled()) throw new Error("Category is not enabled");
+
+        return category;
+    }
+
+    @Override
     public FindAllResponse findAll(Integer page, Integer size, String sortBy, String sortDir) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(page, size, sort);
@@ -73,6 +83,20 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public FindAllResponse findAllEnabled() {
+        List<Category> categories = categoryRepository.findAllByEnabled();
+        Page<Category> categoryPage = new PageImpl<>(categories);
+        List<Category> categoryList = categoryPage.getContent();
+
+        return new FindAllResponse(categoryList,
+                categoryPage.getNumber(),
+                categoryPage.getSize(),
+                categoryPage.getTotalElements(),
+                categoryPage.getTotalPages(),
+                categoryPage.isLast());
+    }
+
+    @Override
     public void writeCategoriesToCSV(Writer writer) throws IOException {
         List<Category> categoryList = categoryRepository.findAll();
         try (CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT.withHeader("ID", "Name"))) {
@@ -88,14 +112,11 @@ public class CategoryServiceImpl implements CategoryService {
     public Category save(Category category) {
         Category categoryExists = categoryRepository.findByName(category.getName());
         if (categoryExists != null) {
-            throw new Error("Category already exists with this name: " + category.getName());
+            throw new Error("Category already exists with the name: " + category.getName());
         }
-        Category parent = category.getParent();
-        if (parent != null) {
-            String allParentIds = parent.getAllParentIDs() == null ? "-" : parent.getAllParentIDs();
-            allParentIds += String.valueOf(parent.getId());
-            category.setAllParentIDs(allParentIds);
-        }
+        String alias = category.getName().trim().replaceAll("/[^A-Za-z\\d]/", "-");
+        category.setAlias(alias);
+        category.setEnabled(true);
         return categoryRepository.save(category);
     }
 

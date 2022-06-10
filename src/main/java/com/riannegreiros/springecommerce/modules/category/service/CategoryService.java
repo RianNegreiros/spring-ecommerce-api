@@ -6,11 +6,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.List;
 
 public interface CategoryService {
+    Category findCategory(String alias);
     FindAllResponse findAll(Integer page, Integer size, String sortBy, String sortDir);
     FindAllResponse findAllRootCategories();
     FindAllResponse findAllByKeyword(String keyword, Integer page, Integer size, String sortBy, String sortDir);
+    FindAllResponse findAllEnabled();
     void writeCategoriesToCSV(Writer writer) throws IOException;
     Category save(Category category);
     Category update(Category category, Long id);

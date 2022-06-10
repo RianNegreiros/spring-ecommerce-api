@@ -16,8 +16,7 @@ public class Category {
     private String alias;
     private String image;
 
-    @Column(name = "all_parent_ids", nullable = false)
-    private String allParentIDs;
+    private Boolean enabled;
 
     @OneToOne
     @JoinColumn(name = "parent_id")
@@ -73,6 +72,14 @@ public class Category {
         this.image = image;
     }
 
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
     public Category getParent() {
         return parent;
     }
@@ -93,13 +100,5 @@ public class Category {
     public String getImagePath() {
         if (image == null || id == null) return null;
         return "/category-images/" + id + "/" + image;
-    }
-
-    public String getAllParentIDs() {
-        return allParentIDs;
-    }
-
-    public void setAllParentIDs(String allParentIDs) {
-        this.allParentIDs = allParentIDs;
     }
 }

@@ -22,6 +22,12 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
+    @GetMapping("/{alias}")
+    public ResponseEntity<Category> findCategory(@PathVariable(name = "alias") String alias) {
+        Category category = categoryService.findCategory(alias);
+        return new ResponseEntity<>(category, HttpStatus.FOUND);
+    }
+
     @GetMapping
     public FindAllResponse findAllByKeyword(
             @RequestParam(value = "keyword", required = false) String keyword,
@@ -34,9 +40,14 @@ public class CategoryController {
         return categoryService.findAllByKeyword(keyword, page, size, sortBy, sortDir);
     }
 
-    @GetMapping("/rootCategories")
+    @GetMapping("/root")
     public FindAllResponse findAllRoot() {
         return categoryService.findAllRootCategories();
+    }
+
+    @GetMapping("/enable")
+    public FindAllResponse findAllEnabled() {
+        return categoryService.findAllEnabled();
     }
 
     @GetMapping("/csv")
