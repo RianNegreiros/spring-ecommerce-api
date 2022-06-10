@@ -32,6 +32,17 @@ public class CurrencyServiceImpl implements CurrencyService {
     }
 
     @Override
+    public Currency update(Currency currency) {
+        Currency currencyExist = currencyRepository.findByNameOrCode(currency.getName(), currency.getCode());
+        if (currencyExist == null) throw new ResourceNotFoundException("Currency", "Name and Code", currency.getName() + " " + currency.getCode());
+
+        currencyExist.setName(currency.getName());
+        currencyExist.setSymbol(currency.getSymbol());
+        currencyExist.setCode(currency.getCode());
+        return currencyRepository.save(currencyExist);
+    }
+
+    @Override
     public void delete(Integer id) {
         Currency currency = currencyRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Currency", "ID", id.toString()));
 

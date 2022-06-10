@@ -30,6 +30,12 @@ public class CurrencyController {
         return new ResponseEntity<>(savedCurrency, HttpStatus.CREATED);
     }
 
+    @PutMapping
+    public ResponseEntity<Currency> update(@RequestBody Currency currency) {
+        Currency updatedCurrency = currencyService.update(currency);
+        return new ResponseEntity<>(updatedCurrency, HttpStatus.CREATED);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable(name = "id") Integer id) {
         currencyService.delete(id);
