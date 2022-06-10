@@ -1,7 +1,7 @@
 package com.riannegreiros.springecommerce.modules.product.ServiceTests;
 
 import com.riannegreiros.springecommerce.exception.ResourceNotFoundException;
-import com.riannegreiros.springecommerce.modules.category.entity.Category;
+import com.riannegreiros.springecommerce.modules.category.repository.CategoryRepository;
 import com.riannegreiros.springecommerce.modules.product.entity.Product;
 import com.riannegreiros.springecommerce.modules.product.repository.ProductRepository;
 import com.riannegreiros.springecommerce.modules.product.service.Impl.ProductServiceImpl;
@@ -17,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -32,11 +31,13 @@ public class ProductServiceTests {
 
     @Mock
     ProductRepository productRepository;
+    @Mock
+    CategoryRepository categoryRepository;
     ProductServiceImpl productService;
 
     @BeforeEach
     void setUp() {
-        productService = new ProductServiceImpl(productRepository);
+        productService = new ProductServiceImpl(productRepository, categoryRepository);
     }
 
     @Test

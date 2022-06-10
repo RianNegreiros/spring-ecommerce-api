@@ -1,7 +1,7 @@
 package com.riannegreiros.springecommerce.modules.product.service.Impl;
 
 import com.riannegreiros.springecommerce.exception.ResourceNotFoundException;
-import com.riannegreiros.springecommerce.modules.category.entity.Category;
+import com.riannegreiros.springecommerce.modules.category.repository.CategoryRepository;
 import com.riannegreiros.springecommerce.modules.product.entity.Product;
 import com.riannegreiros.springecommerce.modules.product.entity.ProductImage;
 import com.riannegreiros.springecommerce.modules.product.repository.ProductRepository;
@@ -28,9 +28,11 @@ import java.util.Set;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
@@ -53,6 +55,22 @@ public class ProductServiceImpl implements ProductService {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<Product> productPage = productRepository.findAll(keyword, pageable);
+        List<Product> productList = productPage.toList();
+
+        return new FindAllResponse(productList,
+                productPage.getNumber(),
+                productPage.getSize(),
+                productPage.getTotalElements(),
+                productPage.getTotalPages(),
+                productPage.isLast());
+    }
+
+    @Override
+    public FindAllResponse findAllByCategory(Long categoryId, Integer page, Integer size, String sortBy, String sortDir) {
+        categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category", "ID", categoryId.toString()));
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Product> productPage = productRepository.findAllByCategory(categoryId, pageable);
         List<Product> productList = productPage.toList();
 
         return new FindAllResponse(productList,

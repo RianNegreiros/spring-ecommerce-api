@@ -36,6 +36,17 @@ public class ProductController {
         return productService.findAllByKeyword(keyword, page, size, sortBy, sortDir);
     }
 
+    @GetMapping("/{id}")
+    public FindAllResponse findAllByCategory(
+            @PathVariable(value = "id", required = false) Long id,
+            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) Integer page,
+            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) Integer size,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIRECTION, required = false) String sortDir
+    ) {
+        return productService.findAllByCategory(id, page, size, sortBy, sortDir);
+    }
+
     @PostMapping
     public ResponseEntity<Product> save(
             @RequestBody Product product,

@@ -8,11 +8,9 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
     Product findByName(String name);
-
     @Query("UPDATE Product p SET p.enabled = ?2 WHERE p.id = ?1")
     @Modifying
     void updateEnabledStatus(Long id, boolean enabled);
@@ -23,4 +21,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "OR p.brand.name LIKE %?1%" +
             "OR p.category.name LIKE %?1%")
     Page<Product> findAll(String keyword, Pageable pageable);
+
+    @Query("SELECT p FROM Product p WHERE p.enabled = true AND p.category.id = ?1 ORDER BY p.name ASC")
+    Page<Product> findAllByCategory(Long categoryId, Pageable pageable);
 }
