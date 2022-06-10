@@ -29,4 +29,10 @@ public class CountryController {
         Country savedCountry = countryService.save(country);
         return new ResponseEntity<>(savedCountry, HttpStatus.CREATED);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable(name = "id")Integer id) {
+        countryService.delete(id);
+        return new ResponseEntity<>("Country has been successfully deleted", HttpStatus.OK);
+    }
 }

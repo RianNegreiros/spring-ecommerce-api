@@ -10,7 +10,12 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,5 +42,19 @@ public class CountryServiceTests {
         Country capturedCountry = countryArgumentCaptor.getValue();
 
         assertThat(capturedCountry).isEqualTo(country);
+    }
+
+    @Test
+    public void testDelete() {
+        Country country = new Country("any_name", "any_code");
+
+        given(countryRepository.findById(any()))
+                .willReturn(Optional.of(country));
+
+        countryService.delete(1);
+
+        ArgumentCaptor<Country> countryArgumentCaptor = ArgumentCaptor.forClass(Country.class);
+
+        verify(countryRepository, times(1)).delete(countryArgumentCaptor.capture());
     }
 }

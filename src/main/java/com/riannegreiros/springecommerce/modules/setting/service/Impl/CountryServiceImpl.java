@@ -1,5 +1,6 @@
 package com.riannegreiros.springecommerce.modules.setting.service.Impl;
 
+import com.riannegreiros.springecommerce.exception.ResourceNotFoundException;
 import com.riannegreiros.springecommerce.modules.setting.entity.Country;
 import com.riannegreiros.springecommerce.modules.setting.repository.CountryRepository;
 import com.riannegreiros.springecommerce.modules.setting.service.CountryService;
@@ -27,5 +28,11 @@ public class CountryServiceImpl implements CountryService {
         if (countryExist != null) throw new Error("Country already exist");
 
         return countryRepository.save(country);
+    }
+
+    @Override
+    public void delete(Integer id) {
+        Country country = countryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Country", "ID", id.toString()));
+        countryRepository.delete(country);
     }
 }
