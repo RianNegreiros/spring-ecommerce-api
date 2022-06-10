@@ -2,6 +2,7 @@ package com.riannegreiros.springecommerce.modules.setting.state;
 
 import com.riannegreiros.springecommerce.modules.setting.entity.Country;
 import com.riannegreiros.springecommerce.modules.setting.entity.State;
+import com.riannegreiros.springecommerce.modules.setting.repository.CountryRepository;
 import com.riannegreiros.springecommerce.modules.setting.repository.StateRepository;
 import com.riannegreiros.springecommerce.modules.setting.service.Impl.StateServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,10 +13,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -24,12 +26,48 @@ import static org.mockito.Mockito.verify;
 public class StateServiceTests {
 
     @Mock
-    StateRepository stateRepository;
-    StateServiceImpl stateService;
+    private StateRepository stateRepository;
+    @Mock
+    private CountryRepository countryRepository;
+    private StateServiceImpl stateService;
 
     @BeforeEach
     void setUp() {
-        stateService = new StateServiceImpl(stateRepository);
+        stateService = new StateServiceImpl(stateRepository, countryRepository);
+    }
+
+    @Test
+    public void testFindAll() {
+        Country country = new Country("any_name", "any_code");
+        State state = new State("any_name", country);
+        State state1 = new State("any_name1", country);
+        given(stateRepository.findAllByOrderByNameAsc())
+                .willReturn(List.of(state, state1));
+
+        List<State> list = stateService.findAll();
+
+        assertThat(list).isNotEmpty();
+        assertThat(list.get(0)).isEqualTo(state);
+        assertThat(list.get(1)).isEqualTo(state1);
+    }
+
+    @Test
+    public void testFindAllByCountry() {
+        Country country = new Country("any_name", "any_code");
+        State state = new State("any_name", country);
+        State state1 = new State("any_name1", country);
+
+        given(countryRepository.findById(anyInt()))
+                .willReturn(Optional.of(country));
+
+        given(stateRepository.findAllByCountryOrderByNameAsc(any()))
+                .willReturn(List.of(state, state1));
+
+        stateService.findAllByCountry(anyInt());
+
+        ArgumentCaptor<Country> countryArgumentCaptor = ArgumentCaptor.forClass(Country.class);
+
+        verify(stateRepository).findAllByCountryOrderByNameAsc(countryArgumentCaptor.capture());
     }
 
     @Test
@@ -49,7 +87,8 @@ public class StateServiceTests {
 
     @Test
     public void testDelete() {
-        State state = new State("any_name", new Country("any_name", "any_code"));
+        Country country = new Country("any_name", "any_code");
+        State state = new State("any_name", country);
 
         given(stateRepository.findById(any()))
                 .willReturn(Optional.of(state));

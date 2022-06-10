@@ -20,8 +20,14 @@ public class StateController {
 
     @GetMapping
     public ResponseEntity<List<State>> findAll() {
-        List<State> countryList = stateService.findAllStates();
-        return new ResponseEntity<>(countryList, HttpStatus.OK);
+        List<State> stateList = stateService.findAll();
+        return new ResponseEntity<>(stateList, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<List<State>> findByCountry(@PathVariable(name = "id") Integer id) {
+        List<State> stateList = stateService.findAllByCountry(id);
+        return new ResponseEntity<>(stateList, HttpStatus.OK);
     }
 
     @PostMapping
