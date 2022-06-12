@@ -21,7 +21,6 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -39,10 +38,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User save(User user) {
-        Optional<User> findUser = userRepository.findUserByEmail(user.getEmail());
-        if (findUser.isPresent()) {
-            throw new Error("User already exists");
-        }
+        userRepository.findUserByEmail(user.getEmail()).orElseThrow(() -> new Error("User already exists  with this email:" + user.getEmail()));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
