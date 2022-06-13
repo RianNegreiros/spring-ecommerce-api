@@ -42,7 +42,7 @@ public class TokenController {
     @GetMapping("/confirm")
     public ResponseEntity<String> confirm(@RequestParam("token") String token) {
         tokenService.confirmToken(token);
-        return new ResponseEntity<>("Confirmed", HttpStatus.OK);
+        return new ResponseEntity<>("Token Confirmed", HttpStatus.OK);
     }
 
     @GetMapping("/refresh")

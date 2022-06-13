@@ -2,7 +2,7 @@ package com.riannegreiros.springecommerce.modules.product.controller;
 
 import com.riannegreiros.springecommerce.modules.product.entity.Product;
 import com.riannegreiros.springecommerce.modules.product.service.ProductService;
-import com.riannegreiros.springecommerce.security.UserPrincipal;
+import com.riannegreiros.springecommerce.security.userDetails.UserPrincipal;
 import com.riannegreiros.springecommerce.utils.AppConstants;
 import com.riannegreiros.springecommerce.utils.FileUploadUtil;
 import com.riannegreiros.springecommerce.utils.FindAllResponse;
@@ -61,12 +61,8 @@ public class ProductController {
             @RequestParam(value = "detailNames", required = false) String[] detailNames,
             @RequestParam(value = "detailValues", required = false) String[] detailValues,
             @RequestParam(value = "imageIDs", required = false) String[] imageIDs,
-            @RequestParam(value = "imageNames", required = false) String[] imageNames,
-            @AuthenticationPrincipal UserPrincipal loggedUser
+            @RequestParam(value = "imageNames", required = false) String[] imageNames
             ) throws IOException {
-        if (loggedUser.hasRole("Salesperson")) {
-            productService.saveProductPrice(product);
-        }
         if (!multipartFile.isEmpty()) productService.saveImage(multipartFile, product.getId());
         if (multipartFiles.length > 0) productService.saveExtraImages(multipartFiles, product.getId());
         productService.saveProductDetails(detailNames, detailValues, product);

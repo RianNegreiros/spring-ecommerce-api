@@ -1,7 +1,7 @@
 package com.riannegreiros.springecommerce.modules.customer.token.service.Impl;
 
 import com.riannegreiros.springecommerce.exception.ResourceNotFoundException;
-import com.riannegreiros.springecommerce.modules.customer.service.CustomerService;
+import com.riannegreiros.springecommerce.modules.customer.repository.CustomerRepository;
 import com.riannegreiros.springecommerce.modules.customer.token.entity.ConfirmationToken;
 import com.riannegreiros.springecommerce.modules.customer.token.repository.TokenRepository;
 import com.riannegreiros.springecommerce.modules.customer.token.service.TokenService;
@@ -17,11 +17,11 @@ public class TokenServiceImpl implements TokenService {
 
     private final TokenRepository tokenRepository;
 
-    private final CustomerService customerService;
+    private final CustomerRepository customerRepository;
 
-    public TokenServiceImpl(TokenRepository tokenRepository, CustomerService customerService) {
+    public TokenServiceImpl(TokenRepository tokenRepository, CustomerRepository customerRepository) {
         this.tokenRepository = tokenRepository;
-        this.customerService = customerService;
+        this.customerRepository = customerRepository;
     }
 
     @Override
@@ -49,6 +49,6 @@ public class TokenServiceImpl implements TokenService {
         if (expireTime.before(new Date())) throw new Error("Token expired");
 
         setConfirmed(token);
-        customerService.enable(tokenExist.getCustomer().getId());
+        customerRepository.enable(tokenExist.getCustomer().getId());
     }
 }

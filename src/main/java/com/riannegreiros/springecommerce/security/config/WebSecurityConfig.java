@@ -1,5 +1,9 @@
-package com.riannegreiros.springecommerce.security;
+package com.riannegreiros.springecommerce.security.config;
 
+import com.riannegreiros.springecommerce.security.filters.CustomUserAuthenticationFilter;
+import com.riannegreiros.springecommerce.security.userDetails.CustomCustomerDetailsService;
+import com.riannegreiros.springecommerce.security.userDetails.CustomUserDetailsService;
+import com.riannegreiros.springecommerce.security.filters.CustomAuthorizationFilter;
 import com.riannegreiros.springecommerce.utils.JWTConstants;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,10 +24,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CustomUserDetailsService userDetailsService;
+    private final CustomCustomerDetailsService customCustomerDetailsService;
 
-    public WebSecurityConfig(CustomUserDetailsService userDetailsService) {
+    public WebSecurityConfig(CustomUserDetailsService userDetailsService, CustomCustomerDetailsService customCustomerDetailsService) {
         this.userDetailsService = userDetailsService;
+        this.customCustomerDetailsService = customCustomerDetailsService;
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -33,16 +40,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(customCustomerDetailsService).passwordEncoder(passwordEncoder());
     }
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean());
-        customAuthenticationFilter.setFilterProcessesUrl("/api/user/login");
+        CustomUserAuthenticationFilter customUserAuthenticationFilter = new CustomUserAuthenticationFilter(authenticationManagerBean());
+        customUserAuthenticationFilter.setFilterProcessesUrl("/api/login");
         http.cors().disable();
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers("/api/user/**", "/api/settings/**").hasAuthority("Admin");
+        http.authorizeRequests().antMatchers("/api/customer/**").permitAll();
         http.authorizeRequests().antMatchers("/api/categories/**", "/api/brands/**").hasAnyAuthority("Admin", "Editor");
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/products/**").hasAnyAuthority("Admin", "Editor", "Salesperson", "Shipper");
         http.authorizeRequests().antMatchers(HttpMethod.POST , "/api/products/**").hasAnyAuthority("Admin", "Editor");
@@ -50,7 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(HttpMethod.DELETE , "/api/products/**").hasAnyAuthority("Admin", "Editor");
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/user/token/**").permitAll();
         http.authorizeRequests().anyRequest().authenticated();
-        http.addFilter(customAuthenticationFilter);
+        http.addFilter(customUserAuthenticationFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.logout().permitAll();
         http.rememberMe().key(JWTConstants.JWT_SECRET).tokenValiditySeconds(7 * 24 * 60 * 60);

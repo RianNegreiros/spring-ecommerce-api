@@ -1,33 +1,18 @@
 package com.riannegreiros.springecommerce.modules.user.controller;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.riannegreiros.springecommerce.utils.JWTConstants;
-import com.riannegreiros.springecommerce.modules.user.entity.Role;
 import com.riannegreiros.springecommerce.modules.user.entity.User;
-import com.riannegreiros.springecommerce.exception.APIException;
 import com.riannegreiros.springecommerce.modules.user.service.UserService;
 import com.riannegreiros.springecommerce.utils.AppConstants;
 import com.riannegreiros.springecommerce.utils.FindAllResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
-
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/api/user")
@@ -56,10 +41,9 @@ public class UserController {
         userService.writeUsersToCSV(servletResponse.getWriter());
     }
 
-    @PostMapping()
-    public ResponseEntity<User> save(@RequestBody User user, @RequestParam(value = "image", required = false) MultipartFile multipartFile) throws IOException {
+    @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE })
+    public ResponseEntity<User> save(@RequestBody User user) {
         User savedUser = userService.save(user);
-        if (!multipartFile.isEmpty()) userService.saveImage(multipartFile, savedUser.getId());
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
