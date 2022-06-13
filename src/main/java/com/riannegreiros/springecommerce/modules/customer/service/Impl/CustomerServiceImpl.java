@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -37,7 +38,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer save(Customer customer) {
-        customerRepository.findByEmail(customer.getEmail()).orElseThrow(() -> new Error("Customer already exists with this email:" + customer.getEmail()));
+        Optional<Customer> customerExist = customerRepository.findByEmail(customer.getEmail());
+        if (customerExist.isPresent()) throw  new Error("Customer already exists with this email: " + customer.getEmail());
         customer.setPassword(passwordEncoder.encode(customer.getPassword()));
         Customer savedCustomer =  customerRepository.save(customer);
 
