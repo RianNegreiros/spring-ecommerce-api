@@ -7,6 +7,6 @@ import java.util.UUID;
 public interface CustomerService {
 
     Customer findByEmail(String email);
-    Customer save(Customer customer);
+    String save(Customer customer);
     void enable(UUID id);
 }

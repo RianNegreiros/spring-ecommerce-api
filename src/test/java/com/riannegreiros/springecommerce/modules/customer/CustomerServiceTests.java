@@ -5,7 +5,6 @@ import com.riannegreiros.springecommerce.modules.customer.entity.Customer;
 import com.riannegreiros.springecommerce.modules.customer.repository.CustomerRepository;
 import com.riannegreiros.springecommerce.modules.customer.service.Impl.CustomerServiceImpl;
 import com.riannegreiros.springecommerce.modules.customer.token.repository.TokenRepository;
-import com.riannegreiros.springecommerce.modules.customer.token.service.Impl.TokenServiceImpl;
 import com.riannegreiros.springecommerce.modules.setting.entity.Country;
 import com.riannegreiros.springecommerce.modules.setting.entity.State;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,21 +30,16 @@ public class CustomerServiceTests {
 
     @Mock
     CustomerRepository customerRepository;
-
     @Mock
     TokenRepository tokenRepository;
-
-    @Mock
-    TokenServiceImpl tokenService;
-
     CustomerServiceImpl customerService;
-
     private Customer customer;
+
 
     @BeforeEach
     void setUp() {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        customerService = new CustomerServiceImpl(customerRepository, passwordEncoder, tokenService);
+        customerService = new CustomerServiceImpl(customerRepository, tokenRepository, passwordEncoder);
 
         Country country = new Country("any_name", "any_code");
         State state = new State("any_name", country);
@@ -64,6 +58,7 @@ public class CustomerServiceTests {
 
     @Test
     public void testSaveCustomer() {
+
         customerService.save(customer);
 
         ArgumentCaptor<Customer> customerArgumentCaptor = ArgumentCaptor.forClass(Customer.class);

@@ -3,11 +3,12 @@ package com.riannegreiros.springecommerce.modules.customer.service.Impl;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.riannegreiros.springecommerce.exception.ResourceNotFoundException;
+import com.riannegreiros.springecommerce.modules.customer.email.service.EmailService;
 import com.riannegreiros.springecommerce.modules.customer.entity.Customer;
 import com.riannegreiros.springecommerce.modules.customer.repository.CustomerRepository;
 import com.riannegreiros.springecommerce.modules.customer.service.CustomerService;
 import com.riannegreiros.springecommerce.modules.customer.token.entity.ConfirmationToken;
-import com.riannegreiros.springecommerce.modules.customer.token.service.Impl.TokenServiceImpl;
+import com.riannegreiros.springecommerce.modules.customer.token.repository.TokenRepository;
 import com.riannegreiros.springecommerce.utils.JWTConstants;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,18 +18,20 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.riannegreiros.springecommerce.modules.customer.email.util.EmailUtil.buildEmail;
+
 @Service
 @Transactional
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
-    private final TokenServiceImpl tokenService;
 
-    public CustomerServiceImpl(CustomerRepository customerRepository, PasswordEncoder passwordEncoder, TokenServiceImpl tokenService) {
+    public CustomerServiceImpl(CustomerRepository customerRepository, TokenRepository tokenRepository, PasswordEncoder passwordEncoder) {
         this.customerRepository = customerRepository;
+        this.tokenRepository = tokenRepository;
         this.passwordEncoder = passwordEncoder;
-        this.tokenService = tokenService;
     }
 
     @Override
@@ -37,7 +40,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer save(Customer customer) {
+    public String save(Customer customer) {
         Optional<Customer> customerExist = customerRepository.findByEmail(customer.getEmail());
         if (customerExist.isPresent()) throw  new Error("Customer already exists with this email: " + customer.getEmail());
         customer.setPassword(passwordEncoder.encode(customer.getPassword()));
@@ -50,10 +53,9 @@ public class CustomerServiceImpl implements CustomerService {
                 new Date(System.currentTimeMillis() + JWTConstants.TOKEN_EXPIRATION),
                 savedCustomer
         );
-        String link = "http://localhost:8080/api/v1/registration/confirm?token=" + token;
-        tokenService.save(confirmationToken);
+        tokenRepository.save(confirmationToken);
 
-        return savedCustomer;
+        return token;
     }
 
     @Override

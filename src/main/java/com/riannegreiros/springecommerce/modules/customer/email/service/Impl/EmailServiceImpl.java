@@ -30,7 +30,7 @@ public class EmailServiceImpl implements EmailService {
             helper.setText(email, true);
             helper.setTo(to);
             helper.setSubject("Confirm your email");
-            helper.setFrom("any@mail.com");
+            helper.setFrom("");
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
             throw new Error("Failed to send email" + e);
