@@ -39,10 +39,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User save(User user) {
-        Optional<User> findUser = userRepository.findUserByEmail(user.getEmail());
-        if (findUser.isPresent()) {
-            throw new Error("User already exists");
-        }
+        Optional<User> userExist = userRepository.findUserByEmail(user.getEmail());
+        if (userExist.isPresent()) throw new Error("User already exist with this email: " + userExist.get().getEmail());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
