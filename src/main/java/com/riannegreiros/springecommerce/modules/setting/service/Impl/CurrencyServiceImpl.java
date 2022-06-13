@@ -7,6 +7,7 @@ import com.riannegreiros.springecommerce.modules.setting.service.CurrencyService
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CurrencyServiceImpl implements CurrencyService {
@@ -24,17 +25,16 @@ public class CurrencyServiceImpl implements CurrencyService {
 
     @Override
     public Currency save(Currency currency) {
-        Currency currencyExist = currencyRepository.findByNameOrCode(currency.getName(), currency.getCode());
+        Optional<Currency> currencyExist = currencyRepository.findByNameOrCode(currency.getName(), currency.getCode());
 
-        if (currencyExist != null) throw new Error("Currency already exist");
+        if (currencyExist.isPresent()) throw new Error("Currency already exist");
 
         return currencyRepository.save(currency);
     }
 
     @Override
     public Currency update(Currency currency) {
-        Currency currencyExist = currencyRepository.findByNameOrCode(currency.getName(), currency.getCode());
-        if (currencyExist == null) throw new ResourceNotFoundException("Currency", "Name and Code", currency.getName() + " " + currency.getCode());
+        Currency currencyExist = currencyRepository.findByNameOrCode(currency.getName(), currency.getCode()).orElseThrow(() -> new ResourceNotFoundException("Currency", "Name and Code", currency.getName() + " " + currency.getCode()));
 
         currencyExist.setName(currency.getName());
         currencyExist.setSymbol(currency.getSymbol());

@@ -18,7 +18,7 @@ public class RoleRepositoryTests {
     private RoleRepository roleRepository;
 
     @Test
-    public void testCreateRole() {
+    public void testSave() {
         Role role = new Role("any_name", "any_description");
         Role savedRole = roleRepository.save(role);
         assertThat(role.getId()).isEqualTo(savedRole.getId());

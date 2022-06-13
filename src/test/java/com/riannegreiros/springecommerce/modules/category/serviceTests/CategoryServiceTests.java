@@ -38,7 +38,7 @@ public class CategoryServiceTests {
     }
 
     @Test
-    public void testSaveCategory() {
+    public void testSave() {
         Category category = new Category("any_category");
         categoryService.save(category);
 
@@ -67,10 +67,10 @@ public class CategoryServiceTests {
     }
 
     @Test
-    public void testThrowIfCategoryExists() {
+    public void testThrowIfExistsByName() {
         Category category = new Category("any_category");
         given(categoryRepository.findByName(anyString()))
-                .willReturn(category);
+                .willReturn(Optional.of(category));
 
         assertThatThrownBy(() -> categoryService.save(category))
                 .isInstanceOf(Error.class)
@@ -80,7 +80,7 @@ public class CategoryServiceTests {
     }
 
     @Test
-    public void testUpdateCategory() {
+    public void testUpdate() {
         Category category = new Category("any_category");
         Category updateCategory = new Category();
         updateCategory.setName("updated_name");
@@ -104,7 +104,7 @@ public class CategoryServiceTests {
     }
 
     @Test
-    public void testRootCategoryStillNull() {
+    public void testRootStillNull() {
         Category parentCategory = new Category("parent_category");
         Category category = new Category("any_category");
         Category updateCategory = new Category();
@@ -126,7 +126,7 @@ public class CategoryServiceTests {
     }
 
     @Test
-    public void testFindAllCategories() {
+    public void testFindAll() {
         Category category = new Category("any_category");
         Category category1 = new Category("any_category");
         Category category2 = new Category("any_category");

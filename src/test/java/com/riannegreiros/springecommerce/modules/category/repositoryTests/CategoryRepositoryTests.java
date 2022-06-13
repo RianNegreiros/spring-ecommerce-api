@@ -17,7 +17,7 @@ public class CategoryRepositoryTests {
     CategoryRepository categoryRepository;
 
     @Test
-    public void testCreateRootCategory() {
+    public void testSaveRootCategory() {
         Category category = new Category("any_category");
         Category savedCategory = categoryRepository.save(category);
 
@@ -25,7 +25,7 @@ public class CategoryRepositoryTests {
     }
 
     @Test
-    public void testCreateSubCategory() {
+    public void testSave() {
         Category parentCategory = new Category("any_category");
         Category subCategory = new Category("any_sub_category", parentCategory);
         Category savedCategory = categoryRepository.save(subCategory);
@@ -52,13 +52,13 @@ public class CategoryRepositoryTests {
     public void testFindByName() {
         Category category = new Category("any_category");
         categoryRepository.save(category);
-        Category findCategory = categoryRepository.findByName("any_category");
+        Category findCategory = categoryRepository.findByName("any_category").get();
 
         assertThat(findCategory.getId()).isEqualTo(category.getId());
     }
 
     @Test
-    public void testFindCategory() {
+    public void testFind() {
         Category category = new Category("any category");
         category.setAlias("any-category");
         category.setEnabled(true);

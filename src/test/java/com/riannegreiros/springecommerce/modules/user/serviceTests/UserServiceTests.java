@@ -39,7 +39,7 @@ public class UserServiceTests {
     }
 
     @Test
-    public void testSaveUser() {
+    public void testSave() {
         userService.save(user);
 
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
@@ -63,7 +63,7 @@ public class UserServiceTests {
     }
 
     @Test
-    public void testUpdateUser() {
+    public void testUpdate() {
         User updateUser = new User("update_mail@mail.com", "update_password", "update_name", "update_name");
 
         given(userRepository.findById(any()))
@@ -84,7 +84,7 @@ public class UserServiceTests {
     }
 
     @Test
-    public void testThrowIfUserNotFound() {
+    public void testThrowIfNotFound() {
         given(userRepository.findById(any()))
                 .willThrow(new ResourceNotFoundException("User", "id", null));
 
@@ -96,7 +96,7 @@ public class UserServiceTests {
     }
 
     @Test
-    public void testGetAllUsers() {
+    public void testFindAll() {
         User user1 = new User("any_mail@mail.com", "any_password", "any_name", "any_name");
         User user2 = new User("any_mail@mail.com", "any_password", "any_name", "any_name");
         User user3 = new User("any_mail@mail.com", "any_password", "any_name", "any_name");

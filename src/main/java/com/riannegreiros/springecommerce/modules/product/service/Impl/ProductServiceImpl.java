@@ -12,7 +12,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
@@ -20,10 +19,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Transactional
@@ -95,11 +91,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product save(Product product) {
-        Product productExists = productRepository.findByName(product.getName());
-
-        if (productExists != null) {
-            throw new ResourceNotFoundException("Product", "Name", product.getName());
-        }
+        productRepository.findByName(product.getName()).orElseThrow(() -> new ResourceNotFoundException("Product", "Name", product.getName()));
 
         if (product.getAlias().isBlank()) {
             String defaultAlias = product.getName().replaceAll(" ",  "-");

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -56,8 +57,8 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public Brand save(Brand brand) {
-        Brand brandExist = brandRepository.findByName(brand.getName());
-        if (brandExist != null) {
+        Optional<Brand> brandExist = brandRepository.findByName(brand.getName());
+        if (brandExist.isPresent()) {
             throw new Error("Brand already exists with this name: " + brand.getName());
         }
         return brandRepository.save(brand);
@@ -65,10 +66,7 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public Brand update(Brand brand) {
-        Brand brandExist = brandRepository.findByName(brand.getName());
-        if (brandExist == null) {
-            throw new ResourceNotFoundException("Brand", "Name", brand.getName());
-        }
+        Brand brandExist = brandRepository.findByName(brand.getName()).orElseThrow(() -> new ResourceNotFoundException("Brand", "Name", brand.getName()));
 
         brandExist.setName(brand.getName());
         brandExist.setLogo(brand.getLogo());

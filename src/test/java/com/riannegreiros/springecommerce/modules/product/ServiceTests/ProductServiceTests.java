@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -64,7 +65,7 @@ public class ProductServiceTests {
     }
 
     @Test
-    public void testThrowIfAlreadyExists() {
+    public void testThrowIfAlreadyExistsByName() {
         Product product = new Product();
         product.setName("any_name");
         product.setAlias("any name");
@@ -72,7 +73,7 @@ public class ProductServiceTests {
         product.setFullDescription("any_description");
 
         given(productRepository.findByName(anyString()))
-                .willReturn(product);
+                .willReturn(Optional.of(product));
 
         assertThatThrownBy(() -> productService.save(product))
                 .isInstanceOf(ResourceNotFoundException.class)

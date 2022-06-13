@@ -12,7 +12,7 @@ import java.util.UUID;
 import static com.riannegreiros.springecommerce.modules.customer.email.util.EmailUtil.buildEmail;
 
 @RestController
-@RequestMapping("/api/customer")
+@RequestMapping("/api/customers")
 public class CustomerController {
 
     private final CustomerService customerService;

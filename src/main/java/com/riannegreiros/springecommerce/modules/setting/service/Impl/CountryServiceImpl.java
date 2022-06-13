@@ -7,6 +7,7 @@ import com.riannegreiros.springecommerce.modules.setting.service.CountryService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CountryServiceImpl implements CountryService {
@@ -24,8 +25,8 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public Country save(Country country) {
-        Country countryExist = countryRepository.findByNameOrCode(country.getName(), country.getCode());
-        if (countryExist != null) throw new Error("Country already exist");
+        Optional<Country> countryExist = countryRepository.findByNameOrCode(country.getName(), country.getCode());
+        if (countryExist.isPresent()) throw new Error("Country already exist");
 
         return countryRepository.save(country);
     }

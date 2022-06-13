@@ -9,7 +9,6 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
@@ -112,10 +111,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category save(Category category) {
-        Category categoryExists = categoryRepository.findByName(category.getName());
-        if (categoryExists != null) {
-            throw new Error("Category already exists with the name: " + category.getName());
-        }
+        categoryRepository.findByName(category.getName()).orElseThrow(() -> new Error("Category already exists with the name: " + category.getName()));
         String alias = category.getName().trim().replaceAll("/[^A-Za-z\\d]/", "-");
         category.setAlias(alias);
         category.setEnabled(true);

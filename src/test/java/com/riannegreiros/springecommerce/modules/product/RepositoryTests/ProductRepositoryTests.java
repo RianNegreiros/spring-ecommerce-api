@@ -45,7 +45,7 @@ public class ProductRepositoryTests {
     }
 
     @Test
-    public void testCreate() {
+    public void testSave() {
         assertThat(savedProduct).isNotNull();
         assertThat(savedProduct).isEqualTo(product);
     }

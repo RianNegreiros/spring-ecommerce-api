@@ -36,7 +36,7 @@ public class BrandRepositoryTests {
 
     @Test
     public void testFindByName() {
-        Brand brandExist = brandRepository.findByName(brand.getName());
+        Brand brandExist = brandRepository.findByName(brand.getName()).get();
 
         assertThat(brandExist).isNotNull();
         assertThat(brandExist.getName()).isEqualTo(brand.getName());

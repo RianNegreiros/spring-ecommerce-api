@@ -57,7 +57,7 @@ public class CustomerServiceTests {
     }
 
     @Test
-    public void testSaveCustomer() {
+    public void testSave() {
 
         customerService.save(customer);
 

@@ -28,7 +28,7 @@ public class UserRepositoryTests {
     }
 
     @Test
-    public void testCreateUser() {
+    public void testSave() {
         assertThat(user.getId()).isEqualTo(savedUser.getId());
     }
 
@@ -46,7 +46,7 @@ public class UserRepositoryTests {
     }
 
     @Test
-    public void testFindUserByEmail() {
+    public void testFindByEmail() {
         assertThat(userRepository.findUserByEmail("any_mail@mail.com")).isNotNull();
     }
 

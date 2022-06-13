@@ -50,7 +50,7 @@ public class ProductController {
         return productService.findAllByCategory(id, page, size, sortBy, sortDir);
     }
 
-    @PostMapping
+    @PostMapping("/images")
     public ResponseEntity<Product> save(
             @RequestBody Product product,
             @RequestParam(value = "image",required = false) MultipartFile multipartFile,

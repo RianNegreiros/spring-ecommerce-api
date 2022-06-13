@@ -33,7 +33,7 @@ public class BrandServiceTests {
     }
 
     @Test
-    public void testSaveBrand() {
+    public void testSave() {
         Brand brand = new Brand("any_brand");
         brandService.save(brand);
 
@@ -47,10 +47,10 @@ public class BrandServiceTests {
     }
 
     @Test
-    public void testThrowIfBrandExists() {
+    public void testThrowIfExistsByName() {
         Brand brand = new Brand("any_brand");
         given(brandRepository.findByName(anyString()))
-                .willReturn(brand);
+                .willReturn(Optional.of(brand));
 
         assertThatThrownBy(() -> brandService.save(brand))
                 .isInstanceOf(Error.class)
@@ -60,14 +60,14 @@ public class BrandServiceTests {
     }
 
     @Test
-    public void testUpdateBrand() {
+    public void testUpdate() {
         Brand brand = new Brand("any_brand");
         Brand updatedBrand = new Brand();
         updatedBrand.setName("updated_name");
         updatedBrand.setLogo("updated_logo.png");
 
         given(brandRepository.findByName(any()))
-                .willReturn(brand);
+                .willReturn(Optional.of(brand));
 
         brandService.update(updatedBrand);
 
@@ -82,7 +82,7 @@ public class BrandServiceTests {
     }
 
     @Test
-    public void testThrowIfBrandDoNotExists() {
+    public void testThrowIfDoNotExists() {
         Brand updatedBrand = new Brand();
         updatedBrand.setName("updated_name");
         updatedBrand.setLogo("updated_logo.png");
@@ -98,7 +98,7 @@ public class BrandServiceTests {
     }
 
     @Test
-    public void testDeleteBrand() {
+    public void testDelete() {
         Brand brand = new Brand("any_brand");
 
         given(brandRepository.findById(any()))
