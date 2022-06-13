@@ -42,13 +42,14 @@ public class UserController {
     }
 
     @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE })
-    public ResponseEntity<User> save(@RequestBody User user) {
+    public ResponseEntity<User> save(@RequestBody User user, @RequestParam(value = "image", required = false) MultipartFile multipartFile) throws IOException {
         User savedUser = userService.save(user);
+            if (!multipartFile.isEmpty()) userService.saveImage(multipartFile, savedUser.getId());
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
     @PostMapping("/image/{id}")
-    public ResponseEntity<String> save(@RequestParam("image") MultipartFile multipartFile, @PathVariable(name = "id") UUID id) throws IOException {
+    public ResponseEntity<String> saveImage(@RequestParam("image") MultipartFile multipartFile, @PathVariable(name = "id") UUID id) throws IOException {
         userService.saveImage(multipartFile, id);
         return new ResponseEntity<>("Image has been saved successfully", HttpStatus.CREATED);
     }

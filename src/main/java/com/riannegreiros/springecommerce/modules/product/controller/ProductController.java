@@ -2,13 +2,10 @@ package com.riannegreiros.springecommerce.modules.product.controller;
 
 import com.riannegreiros.springecommerce.modules.product.entity.Product;
 import com.riannegreiros.springecommerce.modules.product.service.ProductService;
-import com.riannegreiros.springecommerce.security.userDetails.UserPrincipal;
 import com.riannegreiros.springecommerce.utils.AppConstants;
-import com.riannegreiros.springecommerce.utils.FileUploadUtil;
 import com.riannegreiros.springecommerce.utils.FindAllResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -63,11 +60,11 @@ public class ProductController {
             @RequestParam(value = "imageIDs", required = false) String[] imageIDs,
             @RequestParam(value = "imageNames", required = false) String[] imageNames
             ) throws IOException {
-        if (!multipartFile.isEmpty()) productService.saveImage(multipartFile, product.getId());
-        if (multipartFiles.length > 0) productService.saveExtraImages(multipartFiles, product.getId());
-        productService.saveProductDetails(detailNames, detailValues, product);
-        productService.saveExistingImageNames(imageIDs, imageNames, product);
         Product savedProduct = productService.save(product);
+        if (!multipartFile.isEmpty()) productService.saveImage(multipartFile, savedProduct.getId());
+        if (multipartFiles.length > 0) productService.saveExtraImages(multipartFiles, savedProduct.getId());
+        productService.saveProductDetails(detailNames, detailValues, savedProduct);
+        productService.saveExistingImageNames(imageIDs, imageNames, savedProduct);
         return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
     }
 
@@ -86,8 +83,6 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable(name = "id") Long id) throws IOException {
         productService.delete(id);
-        FileUploadUtil.deleteFile("/product-images/" + id);
-        FileUploadUtil.deleteFile("/product-images/" + id + "/extras");
         return new ResponseEntity<>("Product has been deleted successfully", HttpStatus.OK);
     }
 }

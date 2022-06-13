@@ -4,7 +4,6 @@ import com.riannegreiros.springecommerce.modules.user.entity.User;
 import com.riannegreiros.springecommerce.exception.ResourceNotFoundException;
 import com.riannegreiros.springecommerce.modules.user.repository.UserRepository;
 import com.riannegreiros.springecommerce.modules.user.service.UserService;
-import com.riannegreiros.springecommerce.utils.FileUploadUtil;
 import com.riannegreiros.springecommerce.utils.FindAllResponse;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -14,12 +13,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -77,7 +78,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(UUID id) throws IOException {
         User userExist = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id.toString()));
-        FileUploadUtil.deleteFile(userExist.getImagePath());
+        if (Files.exists(Path.of(userExist.getImagePath()))) Files.delete(Path.of(userExist.getImagePath()));
         userRepository.deleteById(id);
     }
 
@@ -101,9 +102,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public void saveImage(MultipartFile multipartFile, UUID id) throws IOException {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id.toString()));
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-        user.setPhoto(fileName);
-        String uploadDir = "/user-images/" + user.getId();
-        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+        byte[] bytes = multipartFile.getBytes();
+        Path path = Paths.get("/images/user-images/" + user.getId().toString() + multipartFile.getOriginalFilename());
+        Files.write(path, bytes);
+        user.setPhoto(path.toString());
     }
 }

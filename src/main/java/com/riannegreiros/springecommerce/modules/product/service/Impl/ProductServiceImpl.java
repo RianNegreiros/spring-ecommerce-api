@@ -6,7 +6,6 @@ import com.riannegreiros.springecommerce.modules.product.entity.Product;
 import com.riannegreiros.springecommerce.modules.product.entity.ProductImage;
 import com.riannegreiros.springecommerce.modules.product.repository.ProductRepository;
 import com.riannegreiros.springecommerce.modules.product.service.ProductService;
-import com.riannegreiros.springecommerce.utils.FileUploadUtil;
 import com.riannegreiros.springecommerce.utils.FindAllResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -121,29 +123,32 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void delete(Long id) {
-        Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Brand", "ID", id.toString()));
-        productRepository.delete(product);
+    public void delete(Long id) throws IOException {
+        Product productExist = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Brand", "ID", id.toString()));
+        if (Files.exists(Path.of(productExist.getMainImagePath()))) Files.delete(Path.of(productExist.getMainImagePath()));
+        if (Files.exists(Path.of(productExist.getMainImagePath()).getParent())) Files.delete(Path.of(productExist.getMainImagePath()).getParent());
+        productRepository.delete(productExist);
     }
 
     @Override
     public void saveImage(MultipartFile multipartFile, Long id) throws IOException {
         Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id.toString()));
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-        product.setMainImage(fileName);
-        String uploadDir = "/product-images/" + product.getId();
-        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+        byte[] bytes = multipartFile.getBytes();
+        Path path = Paths.get("/images/product-images/" + product.getId().toString() + multipartFile.getOriginalFilename());
+        Files.write(path, bytes);
+        product.setMainImage(path.toString());
     }
 
     @Override
     public void saveExtraImages(MultipartFile[] multipartFiles, Long id) throws IOException {
-        Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id.toString()));
-        String uploadDir = "/product-images/" + product.getId();
+        Product productExist = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id.toString()));
         for (MultipartFile multipartFile : multipartFiles) {
             if (!multipartFile.isEmpty()) {
-                String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-                if (!product.containsImageName(fileName)) product.addExtraImage(fileName);
-                FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+                Path path = Paths.get("/images/product-images/" + productExist.getId().toString() + multipartFile.getOriginalFilename());
+                if (!productExist.containsImageName(path.toString())) productExist.addExtraImage(path.toString());
+                byte[] bytes = multipartFile.getBytes();
+                Files.write(path, bytes);
+                productExist.addExtraImage(path.toString());
             }
         }
     }

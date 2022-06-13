@@ -60,7 +60,7 @@ public class CategoryController {
     @PostMapping()
     public ResponseEntity<Category> save(@RequestBody Category category, @RequestParam(value = "image", required = false) MultipartFile multipartFile) throws IOException {
         Category savedCategory = categoryService.save(category);
-        categoryService.saveImage(multipartFile, savedCategory.getId());
+        if (!multipartFile.isEmpty()) categoryService.saveImage(multipartFile, savedCategory.getId());
         return new ResponseEntity<>(savedCategory, HttpStatus.CREATED);
     }
 

@@ -4,7 +4,6 @@ import com.riannegreiros.springecommerce.modules.category.entity.Category;
 import com.riannegreiros.springecommerce.modules.category.repository.CategoryRepository;
 import com.riannegreiros.springecommerce.modules.category.service.CategoryService;
 import com.riannegreiros.springecommerce.exception.ResourceNotFoundException;
-import com.riannegreiros.springecommerce.utils.FileUploadUtil;
 import com.riannegreiros.springecommerce.utils.FindAllResponse;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -16,6 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Service
@@ -136,16 +138,16 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void delete(Long id) throws IOException {
         Category categoryExist = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("category", "id", id.toString()));
-        FileUploadUtil.deleteFile(categoryExist.getImagePath());
+        if (Files.exists(Path.of(categoryExist.getImagePath()))) Files.delete(Path.of(categoryExist.getImagePath()));
         categoryRepository.deleteById(id);
     }
 
     @Override
     public void saveImage(MultipartFile multipartFile, Long id) throws IOException {
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("category", "id", id.toString()));
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-        category.setImage(fileName);
-        String uploadDir = "category-images/" + category.getId();
-        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+        Category categoryExist = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("category", "id", id.toString()));
+        byte[] bytes = multipartFile.getBytes();
+        Path path = Paths.get("/images/user-images/" + categoryExist.getId().toString() + multipartFile.getOriginalFilename());
+        Files.write(path, bytes);
+        categoryExist.setImage(path.toString());
     }
 }
