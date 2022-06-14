@@ -18,6 +18,7 @@ public interface CategoryService {
     void writeCategoriesToCSV(Writer writer) throws IOException;
     Category save(Category category);
     Category update(Category category, Long id);
+    void updateEnabledStatus(Long id, boolean status);
     void delete(Long id) throws IOException;
     void saveImage(MultipartFile multipartFile, Long id) throws IOException;
 }

@@ -15,7 +15,6 @@ public class Category {
     @Column(nullable = false, unique = true)
     private String alias;
     private String image;
-
     private Boolean enabled;
 
     @OneToOne

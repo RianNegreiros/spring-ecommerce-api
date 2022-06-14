@@ -133,6 +133,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public void updateEnabledStatus(Long id, boolean status) {
+        categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("category", "id", id.toString()));
+        categoryRepository.updateEnabledStatus(id, status);
+    }
+
+    @Override
     public void delete(Long id) throws IOException {
         Category categoryExist = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("category", "id", id.toString()));
         storageService.deleteFile(categoryExist.getImagePath());

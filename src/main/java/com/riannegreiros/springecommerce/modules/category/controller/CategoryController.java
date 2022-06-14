@@ -6,6 +6,7 @@ import com.riannegreiros.springecommerce.utils.AppConstants;
 import com.riannegreiros.springecommerce.utils.FindAllResponse;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,13 +24,13 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping("/{alias}")
+    @GetMapping(value = "/{alias}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Category> findCategory(@PathVariable(name = "alias") String alias) {
         Category category = categoryService.findCategory(alias);
         return new ResponseEntity<>(category, HttpStatus.FOUND);
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public FindAllResponse findAllByKeyword(
             @RequestParam(value = "keyword", required = false) String keyword,
             @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) Integer page,
@@ -41,12 +42,12 @@ public class CategoryController {
         return categoryService.findAllByKeyword(keyword, page, size, sortBy, sortDir);
     }
 
-    @GetMapping("/root")
+    @GetMapping(value = "/root", produces = MediaType.APPLICATION_JSON_VALUE)
     public FindAllResponse findAllRoot() {
         return categoryService.findAllRootCategories();
     }
 
-    @GetMapping("/enable")
+    @GetMapping(value = "/enable", produces = MediaType.APPLICATION_JSON_VALUE)
     public FindAllResponse findAllEnabled() {
         return categoryService.findAllEnabled();
     }
@@ -81,6 +82,12 @@ public class CategoryController {
     public ResponseEntity<String> saveImage(@RequestParam("image") MultipartFile multipartFile, @PathVariable(name = "id") Long id) throws IOException {
         categoryService.saveImage(multipartFile, id);
         return new ResponseEntity<>("Image has been saved successfully", HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/{id}/enabled/{status}")
+    public ResponseEntity<String> updateEnabledStatus(@PathVariable(name = "id") Long id, @PathVariable(name = "status") Boolean status) {
+        categoryService.updateEnabledStatus(id, status);
+        return new ResponseEntity<>("Category status has been deleted successfully updated to: " + status, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
