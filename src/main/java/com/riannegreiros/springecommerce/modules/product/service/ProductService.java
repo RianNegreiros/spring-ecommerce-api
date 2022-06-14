@@ -15,16 +15,16 @@ public interface ProductService {
     FindAllResponse findAllByKeyword(String keyword, Integer page, Integer size, String sortBy, String sortDir);
     FindAllResponse findAllByCategory(Long categoryId, Integer page, Integer size, String sortBy, String sortDir);
     Product save (Product product);
-    List<ProductDetail> findAllProductDetails(Long id);
-    byte[] findImage(Long id) throws IOException;
+    void updatePrice(Long id, Float price);
     Product update(Product product, Long id);
     void updateEnabledStatus(Long id, boolean status);
     void delete(Long id) throws IOException;
+    byte[] findImage(Long id) throws IOException;
     void saveImage(MultipartFile multipartFile, Long id) throws IOException;
     void saveExtraImages(MultipartFile[] multipartFiles, Long id) throws IOException;
     void saveProductDetails(String[] detailNames, String[] detailValues, Long id);
     void saveExistingImageNames(String[] imageIDs, String[] imageNames, Long id);
-    void updatePrice(Long id, Float price);
+    List<ProductDetail> findAllProductDetails(Long id);
     Product addDetail(ProductDetail productDetail, Long id);
     void deleteDetail(Long id);
 }

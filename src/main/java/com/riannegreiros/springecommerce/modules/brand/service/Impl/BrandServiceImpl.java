@@ -83,13 +83,6 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public void saveImage(MultipartFile multipartFile, Long id) throws IOException {
-        Brand brandExist = brandRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("category", "id", id.toString()));
-        String fileName = brandExist.getId().toString() + multipartFile.getOriginalFilename();
-        storageService.uploadFile(fileName, multipartFile);
-        brandExist.setLogo(fileName);
-    }
-    @Override
     public void delete(Long id) {
         Brand brandExist = brandRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Brand", "Id", id.toString()));
         storageService.deleteFile(brandExist.getLogoImagePath());
@@ -100,5 +93,13 @@ public class BrandServiceImpl implements BrandService {
     public byte[] findImage(Long id) throws IOException {
         Brand brandExist = brandRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("category", "id", id.toString()));
         return storageService.downloadFile(brandExist.getLogoImagePath());
+    }
+
+    @Override
+    public void saveImage(MultipartFile multipartFile, Long id) throws IOException {
+        Brand brandExist = brandRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("category", "id", id.toString()));
+        String fileName = brandExist.getId().toString() + multipartFile.getOriginalFilename();
+        storageService.uploadFile(fileName, multipartFile);
+        brandExist.setLogo(fileName);
     }
 }

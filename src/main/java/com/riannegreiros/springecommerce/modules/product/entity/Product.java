@@ -230,7 +230,7 @@ public class Product {
     }
 
     public String getMainImagePath() {
-        return "/product-images/" + this.id + "/" + this.mainImage;
+        return "/products-images/" + id + mainImage;
     }
 
     public void addDetail(String name, String value) {

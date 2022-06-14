@@ -107,7 +107,7 @@ public class User {
     @Transient
     public String getImagePath() {
         if (photo == null || id == null) return null;
-        return "/user-images/" + id + "/" + photo;
+        return "/users-images/" + id + photo;
     }
 
     public boolean hasRole(String roleName) {

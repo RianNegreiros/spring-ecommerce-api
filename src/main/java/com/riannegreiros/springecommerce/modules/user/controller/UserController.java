@@ -42,29 +42,11 @@ public class UserController {
         userService.writeUsersToCSV(servletResponse.getWriter());
     }
 
-    @GetMapping("/image/{id}")
-    public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable(name = "id") UUID id) throws IOException {
-        byte[] data = userService.findImage(id);
-        ByteArrayResource resource = new ByteArrayResource(data);
-        return ResponseEntity
-                .ok()
-                .contentLength(data.length)
-                .header("Content-type", "application/octet-stream")
-                .header("Content-disposition", "attachment: filename=\"" + id + "\"")
-                .body(resource);
-    }
-
     @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<User> save(@RequestBody User user, @RequestParam(value = "image", required = false) MultipartFile multipartFile) throws IOException {
         User savedUser = userService.save(user);
             if (!multipartFile.isEmpty()) userService.saveImage(multipartFile, savedUser.getId());
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
-    }
-
-    @PostMapping("/image/{id}")
-    public ResponseEntity<String> saveImage(@RequestParam("image") MultipartFile multipartFile, @PathVariable(name = "id") UUID id) throws IOException {
-        userService.saveImage(multipartFile, id);
-        return new ResponseEntity<>("Image has been saved successfully", HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
@@ -78,5 +60,23 @@ public class UserController {
     public ResponseEntity<String> delete(@PathVariable(name = "id") UUID id) throws IOException {
         userService.delete(id);
         return new ResponseEntity<>("User has been deleted successfully", HttpStatus.OK);
+    }
+
+    @PostMapping("/image/{id}")
+    public ResponseEntity<String> saveImage(@RequestParam("image") MultipartFile multipartFile, @PathVariable(name = "id") UUID id) throws IOException {
+        userService.saveImage(multipartFile, id);
+        return new ResponseEntity<>("Image has been saved successfully", HttpStatus.CREATED);
+    }
+
+    @GetMapping("/image/{id}")
+    public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable(name = "id") UUID id) throws IOException {
+        byte[] data = userService.findImage(id);
+        ByteArrayResource resource = new ByteArrayResource(data);
+        return ResponseEntity
+                .ok()
+                .contentLength(data.length)
+                .header("Content-type", "application/octet-stream")
+                .header("Content-disposition", "attachment: filename=\"" + id + "\"")
+                .body(resource);
     }
 }

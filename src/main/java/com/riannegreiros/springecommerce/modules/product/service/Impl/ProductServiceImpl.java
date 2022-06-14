@@ -38,10 +38,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product findByAlias(String alias) {
         Product product = productRepository.findByAliasEnabled(alias);
-
         if (product == null) throw new ResourceNotFoundException("Product", "Alias", alias);
         if (!product.isEnabled()) throw new Error("Product is not enabled");
-
         return product;
     }
 
@@ -110,19 +108,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDetail> findAllProductDetails(Long id) {
-        Product productExist = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id.toString()));
-        return productExist.getDetails();
-    }
-
-    @Override
-    public void updateEnabledStatus(Long id, boolean status) {
-        productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product", "ID", id.toString()));
-
-        productRepository.updateEnabledStatus(id, status);
-    }
-
-    @Override
     public Product update(Product product, Long id) {
         Product productExist = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id.toString()));
         productExist.setName(product.getName());
@@ -142,6 +127,46 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public void updateEnabledStatus(Long id, boolean status) {
+        productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product", "ID", id.toString()));
+
+        productRepository.updateEnabledStatus(id, status);
+    }
+
+    @Override
+    public void updatePrice(Long id, Float price) {
+        Product productExist = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("category", "id", id.toString()));
+        productExist.setPrice(price);
+    }
+
+    @Override
+    public void delete(Long id) throws IOException {
+        Product productExist = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Brand", "ID", id.toString()));
+        storageService.deleteFile(productExist.getMainImagePath());
+        productExist.getImages().forEach(image -> storageService.deleteFile(image.getName()));
+        productRepository.delete(productExist);
+    }
+
+    @Override
+    public List<ProductDetail> findAllProductDetails(Long id) {
+        Product productExist = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id.toString()));
+        return productExist.getDetails();
+    }
+
+    @Override
+    public void saveProductDetails(String[] detailNames, String[] detailValues, Long id) {
+        Product productExist = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id.toString()));
+        if (detailNames.length <= 0 || detailValues.length <= 0) return;
+
+        for (int i = 0; i < detailNames.length; i++) {
+            String name = detailNames[i];
+            String value = detailValues[i];
+
+            if (!name.isBlank() && !value.isBlank()) productExist.addDetail(name, value);
+        }
+    }
+
+    @Override
     public Product addDetail(ProductDetail productDetail, Long id) {
         Product productExist = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id.toString()));
         productExist.getDetails().add(productDetail);
@@ -151,14 +176,6 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteDetail(Long id) {
         productRepository.deleteProductDetail(id);
-    }
-
-    @Override
-    public void delete(Long id) throws IOException {
-        Product productExist = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Brand", "ID", id.toString()));
-        storageService.deleteFile(productExist.getMainImagePath());
-        productExist.getImages().forEach(image -> storageService.deleteFile(image.getName()));
-        productRepository.delete(productExist);
     }
 
     @Override
@@ -182,19 +199,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void saveProductDetails(String[] detailNames, String[] detailValues, Long id) {
-        Product productExist = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id.toString()));
-        if (detailNames.length <= 0 || detailValues.length <= 0) return;
-
-        for (int i = 0; i < detailNames.length; i++) {
-            String name = detailNames[i];
-            String value = detailValues[i];
-
-            if (!name.isBlank() && !value.isBlank()) productExist.addDetail(name, value);
-        }
-    }
-
-    @Override
     public void saveExistingImageNames(String[] imageIDs, String[] imageNames, Long id) {
         Product productExist = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id.toString()));
         if (imageIDs.length <= 0 || imageNames.length <= 0) return;
@@ -209,12 +213,6 @@ public class ProductServiceImpl implements ProductService {
         }
 
         productExist.setImages(images);
-    }
-
-    @Override
-    public void updatePrice(Long id, Float price) {
-        Product productExist = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("category", "id", id.toString()));
-        productExist.setPrice(price);
     }
 
     @Override

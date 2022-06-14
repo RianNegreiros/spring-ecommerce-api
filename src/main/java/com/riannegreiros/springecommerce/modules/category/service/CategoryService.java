@@ -10,7 +10,6 @@ import java.util.List;
 
 public interface CategoryService {
     Category findCategory(String alias);
-    byte[] findImage(Long id) throws IOException;
     FindAllResponse findAll(Integer page, Integer size, String sortBy, String sortDir);
     FindAllResponse findAllRootCategories();
     FindAllResponse findAllByKeyword(String keyword, Integer page, Integer size, String sortBy, String sortDir);
@@ -21,4 +20,5 @@ public interface CategoryService {
     void updateEnabledStatus(Long id, boolean status);
     void delete(Long id) throws IOException;
     void saveImage(MultipartFile multipartFile, Long id) throws IOException;
+    byte[] findImage(Long id) throws IOException;
 }

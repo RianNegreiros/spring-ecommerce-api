@@ -59,6 +59,37 @@ public class CategoryController {
         categoryService.writeCategoriesToCSV(servletResponse.getWriter());
     }
 
+    @PostMapping()
+    public ResponseEntity<Category> save(@RequestBody Category category, @RequestParam(value = "image", required = false) MultipartFile multipartFile) throws IOException {
+        Category savedCategory = categoryService.save(category);
+        if (!multipartFile.isEmpty()) categoryService.saveImage(multipartFile, savedCategory.getId());
+        return new ResponseEntity<>(savedCategory, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Category> update(@RequestBody Category category, @PathVariable(name = "id") Long id) {
+        Category updatedCategory = categoryService.update(category, id);
+        return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}/enabled/{status}")
+    public ResponseEntity<String> updateEnabledStatus(@PathVariable(name = "id") Long id, @PathVariable(name = "status") Boolean status) {
+        categoryService.updateEnabledStatus(id, status);
+        return new ResponseEntity<>("Category status has been deleted successfully updated to: " + status, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable(name = "id") Long id) throws IOException {
+        categoryService.delete(id);
+        return new ResponseEntity<>("Category has been deleted successfully", HttpStatus.OK);
+    }
+
+    @PostMapping("/image/{id}")
+    public ResponseEntity<String> saveImage(@RequestParam("image") MultipartFile multipartFile, @PathVariable(name = "id") Long id) throws IOException {
+        categoryService.saveImage(multipartFile, id);
+        return new ResponseEntity<>("Image has been saved successfully", HttpStatus.CREATED);
+    }
+
     @GetMapping("/image/{id}")
     public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable(name = "id") Long id) throws IOException {
         byte[] data = categoryService.findImage(id);
@@ -69,37 +100,5 @@ public class CategoryController {
                 .header("Content-type", "application/octet-stream")
                 .header("Content-disposition", "attachment: filename=\"" + id + "\"")
                 .body(resource);
-    }
-
-    @PostMapping()
-    public ResponseEntity<Category> save(@RequestBody Category category, @RequestParam(value = "image", required = false) MultipartFile multipartFile) throws IOException {
-        Category savedCategory = categoryService.save(category);
-        if (!multipartFile.isEmpty()) categoryService.saveImage(multipartFile, savedCategory.getId());
-        return new ResponseEntity<>(savedCategory, HttpStatus.CREATED);
-    }
-
-    @PostMapping("/image/{id}")
-    public ResponseEntity<String> saveImage(@RequestParam("image") MultipartFile multipartFile, @PathVariable(name = "id") Long id) throws IOException {
-        categoryService.saveImage(multipartFile, id);
-        return new ResponseEntity<>("Image has been saved successfully", HttpStatus.CREATED);
-    }
-
-    @PatchMapping("/{id}/enabled/{status}")
-    public ResponseEntity<String> updateEnabledStatus(@PathVariable(name = "id") Long id, @PathVariable(name = "status") Boolean status) {
-        categoryService.updateEnabledStatus(id, status);
-        return new ResponseEntity<>("Category status has been deleted successfully updated to: " + status, HttpStatus.OK);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Category> update(@RequestBody Category category, @PathVariable(name = "id") Long id) {
-        Category updatedCategory = categoryService.update(category, id);
-
-        return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable(name = "id") Long id) throws IOException {
-        categoryService.delete(id);
-        return new ResponseEntity<>("Category has been deleted successfully", HttpStatus.OK);
     }
 }

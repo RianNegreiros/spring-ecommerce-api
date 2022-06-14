@@ -99,6 +99,6 @@ public class Category {
     @Transient
     public String getImagePath() {
         if (image == null || id == null) return null;
-        return "/category-images/" + id + "/" + image;
+        return "/categories-images/" + id + image;
     }
 }
