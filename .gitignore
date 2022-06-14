@@ -31,6 +31,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-/src/main/java/com/riannegreiros/springecommerce/utils/JWTConstants.java
-/src/main/java/com/riannegreiros/springecommerce/utils/AWSConstants.java
