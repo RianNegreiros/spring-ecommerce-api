@@ -63,12 +63,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(AUTH_WHITELIST).permitAll();
         http.authorizeRequests().antMatchers("/api/customers/**").permitAll();
         http.authorizeRequests().antMatchers("/api/token/**").permitAll();
-        http.authorizeRequests().antMatchers("/api/users/**", "/api/settings/**").hasAuthority("Admin");
-        http.authorizeRequests().antMatchers("/api/categories/**", "/api/brands/**").hasAnyAuthority("Admin", "Editor");
-        http.authorizeRequests().antMatchers(HttpMethod.POST , "/api/products/**").hasAnyAuthority("Admin", "Editor");
-        http.authorizeRequests().antMatchers(HttpMethod.DELETE , "/api/products/**").hasAnyAuthority("Admin", "Editor");
-        http.authorizeRequests().antMatchers(HttpMethod.PUT , "/api/products/**").hasAnyAuthority("Admin", "Editor", "Salesperson");
-        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/products/**").hasAnyAuthority("Admin", "Editor", "Salesperson", "Shipper");
+        http.authorizeRequests().antMatchers("/api/user/**").hasAnyAuthority("ADMIN");
+        http.authorizeRequests().antMatchers("/api/categories/**").hasAnyAuthority("ADMIN");
+        http.authorizeRequests().antMatchers("/api/brands/**").hasAnyAuthority("ADMIN");
+        http.authorizeRequests().antMatchers("/api/products/**").hasAnyAuthority("ADMIN", "SALESPERSON", "SHIPPER");
+        http.authorizeRequests().antMatchers("/api/settings/**").hasAnyAuthority("ADMIN");
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
