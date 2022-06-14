@@ -22,15 +22,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.riannegreiros.springecommerce.utils.JWTConstants.*;
+import static com.riannegreiros.springecommerce.utils.AppConstants.REFRESH_TOKEN_EXPIRATION;
+import static com.riannegreiros.springecommerce.utils.AppConstants.TOKEN_EXPIRATION;
+import static com.riannegreiros.springecommerce.utils.JWTConstants.JWTSECRET;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-public class CustomUserAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
 
-    public CustomUserAuthenticationFilter(AuthenticationManager authenticationManager) {
+    public CustomAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }
+
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -56,13 +59,13 @@ public class CustomUserAuthenticationFilter extends UsernamePasswordAuthenticati
                 .withExpiresAt(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION))
                 .withIssuer(request.getRequestURL().toString())
                 .withClaim("roles", userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-                .sign(Algorithm.HMAC512(JWT_SECRET.getBytes()));
+                .sign(Algorithm.HMAC512(JWTSECRET.getBytes()));
 
         String refresh_token = JWT.create()
                 .withSubject(userDetails.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION))
                 .withIssuer(request.getRequestURL().toString())
-                .sign(Algorithm.HMAC512(JWT_SECRET.getBytes()));
+                .sign(Algorithm.HMAC512(JWTSECRET.getBytes()));
 
         Map<String, String> tokens = new HashMap<>();
         tokens.put("access_token", access_token);

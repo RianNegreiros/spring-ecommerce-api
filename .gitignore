@@ -33,4 +33,4 @@ build/
 .vscode/
 
 /src/main/java/com/riannegreiros/springecommerce/utils/JWTConstants.java
-/src/main/resources/aws.properties
+/src/main/java/com/riannegreiros/springecommerce/utils/AWSConstants.java

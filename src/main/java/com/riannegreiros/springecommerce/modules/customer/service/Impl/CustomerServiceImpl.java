@@ -3,13 +3,11 @@ package com.riannegreiros.springecommerce.modules.customer.service.Impl;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.riannegreiros.springecommerce.exception.ResourceNotFoundException;
-import com.riannegreiros.springecommerce.modules.customer.email.service.EmailService;
 import com.riannegreiros.springecommerce.modules.customer.entity.Customer;
 import com.riannegreiros.springecommerce.modules.customer.repository.CustomerRepository;
 import com.riannegreiros.springecommerce.modules.customer.service.CustomerService;
 import com.riannegreiros.springecommerce.modules.customer.token.entity.ConfirmationToken;
 import com.riannegreiros.springecommerce.modules.customer.token.repository.TokenRepository;
-import com.riannegreiros.springecommerce.utils.JWTConstants;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +16,12 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.riannegreiros.springecommerce.modules.customer.email.util.EmailUtil.buildEmail;
+import static com.riannegreiros.springecommerce.utils.AppConstants.TOKEN_EXPIRATION;
+import static com.riannegreiros.springecommerce.utils.JWTConstants.JWTSECRET;
 
 @Service
 @Transactional
 public class CustomerServiceImpl implements CustomerService {
-
     private final CustomerRepository customerRepository;
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
@@ -46,11 +44,11 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setPassword(passwordEncoder.encode(customer.getPassword()));
         Customer savedCustomer =  customerRepository.save(customer);
 
-        String token = JWT.create().sign(Algorithm.HMAC512(JWTConstants.JWT_SECRET.getBytes()));
+        String token = JWT.create().sign(Algorithm.HMAC512(JWTSECRET.getBytes()));
         ConfirmationToken confirmationToken = new ConfirmationToken(
                 token,
                 new Date(),
-                new Date(System.currentTimeMillis() + JWTConstants.TOKEN_EXPIRATION),
+                new Date(System.currentTimeMillis() + TOKEN_EXPIRATION),
                 savedCustomer
         );
         tokenRepository.save(confirmationToken);

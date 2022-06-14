@@ -16,7 +16,6 @@ import java.util.Optional;
 public class TokenServiceImpl implements TokenService {
 
     private final TokenRepository tokenRepository;
-
     private final CustomerRepository customerRepository;
 
     public TokenServiceImpl(TokenRepository tokenRepository, CustomerRepository customerRepository) {
