@@ -1,5 +1,6 @@
 package com.riannegreiros.springecommerce.modules.brand.serviceTests;
 
+import com.riannegreiros.springecommerce.AWS.StorageService;
 import com.riannegreiros.springecommerce.exception.ResourceNotFoundException;
 import com.riannegreiros.springecommerce.modules.brand.entity.Brand;
 import com.riannegreiros.springecommerce.modules.brand.repository.BrandRepository;
@@ -26,10 +27,11 @@ public class BrandServiceTests {
     @Mock
     BrandRepository brandRepository;
     BrandServiceImpl brandService;
+    StorageService storageService;
 
     @BeforeEach
     void setUp() {
-        brandService = new BrandServiceImpl(brandRepository);
+        brandService = new BrandServiceImpl(brandRepository, storageService);
     }
 
     @Test

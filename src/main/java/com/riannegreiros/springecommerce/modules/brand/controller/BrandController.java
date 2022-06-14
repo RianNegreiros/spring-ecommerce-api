@@ -5,8 +5,12 @@ import com.riannegreiros.springecommerce.modules.brand.service.BrandService;
 import com.riannegreiros.springecommerce.utils.AppConstants;
 import com.riannegreiros.springecommerce.utils.FindAllResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/brands")
@@ -18,7 +22,7 @@ public class BrandController {
         this.brandService = brandService;
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public FindAllResponse findAll(
             @RequestParam(value = "keyword", required = false) String keyword,
             @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) Integer page,
@@ -35,6 +39,13 @@ public class BrandController {
         Brand savedBrand = brandService.save(brand);
         return new ResponseEntity<>(savedBrand, HttpStatus.CREATED);
     }
+
+    @PostMapping("/image/{id}")
+    public ResponseEntity<String> saveImage(@RequestParam("image") MultipartFile multipartFile, @PathVariable(name = "id") Long id) throws IOException {
+        brandService.saveImage(multipartFile, id);
+        return new ResponseEntity<>("Image has been saved successfully", HttpStatus.CREATED);
+    }
+
 
     @PutMapping()
     public ResponseEntity<Brand> update(@RequestBody Brand brand) {
