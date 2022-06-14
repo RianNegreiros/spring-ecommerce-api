@@ -16,6 +16,7 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -112,7 +113,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category save(Category category) {
-        categoryRepository.findByName(category.getName()).orElseThrow(() -> new Error("Category already exists with the name: " + category.getName()));
+        Optional<Category> categoryExist = categoryRepository.findByName(category.getName());
+        if (categoryExist.isPresent()) {
+            throw new Error("Category already exists with the name: " + category.getName());
+        }
         String alias = category.getName().trim().replaceAll("/[^A-Za-z\\d]/", "-");
         category.setAlias(alias);
         category.setEnabled(true);

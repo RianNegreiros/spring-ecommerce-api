@@ -78,8 +78,8 @@ public class ProductServiceTests {
                 .willReturn(Optional.of(product));
 
         assertThatThrownBy(() -> productService.save(product))
-                .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessageContaining("Product", "Name", product.getName());
+                .isInstanceOf(Error.class)
+                .hasMessageContaining("Product already exist with the name: " + product.getName());
 
         verify(productRepository, never()).save(any());
     }

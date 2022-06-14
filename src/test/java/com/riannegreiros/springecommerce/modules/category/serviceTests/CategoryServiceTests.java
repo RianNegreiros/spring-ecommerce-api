@@ -32,12 +32,7 @@ public class CategoryServiceTests {
     @Mock
     private CategoryRepository categoryRepository;
     private CategoryServiceImpl categoryService;
-
     private StorageService storageService;
-
-    public CategoryServiceTests(StorageService storageService) {
-        this.storageService = storageService;
-    }
 
     @BeforeEach
     void setUp() {
@@ -81,7 +76,7 @@ public class CategoryServiceTests {
 
         assertThatThrownBy(() -> categoryService.save(category))
                 .isInstanceOf(Error.class)
-                .hasMessageContaining("Category already exists with this name: " + category.getName());
+                .hasMessageContaining("Category already exists with the name: " + category.getName());
 
         verify(categoryRepository, never()).save(any());
     }

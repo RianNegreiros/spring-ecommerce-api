@@ -90,26 +90,12 @@ public class BrandServiceTests {
         updatedBrand.setLogo("updated_logo.png");
 
         given(brandRepository.findByName(anyString()))
-                .willReturn(null);
+                .willThrow(new ResourceNotFoundException("Brand", "Name", null));
 
         assertThatThrownBy(() -> brandService.update(updatedBrand))
                 .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessageContaining("Brand", "Name", updatedBrand.getName());
+                .hasMessageContaining("Brand", "Name", null);
 
         verify(brandRepository, never()).save(any());
-    }
-
-    @Test
-    public void testDelete() {
-        Brand brand = new Brand("any_brand");
-
-        given(brandRepository.findById(any()))
-                .willReturn(Optional.of(brand));
-
-        brandService.delete(1L);
-
-        ArgumentCaptor<Brand> brandArgumentCaptor = ArgumentCaptor.forClass(Brand.class);
-
-        verify(brandRepository, times(1)).delete(brandArgumentCaptor.capture());
     }
 }

@@ -25,6 +25,7 @@ public class BrandRepositoryTests {
     @BeforeEach
     void setUp() {
         brand = new Brand("any_brand");
+        brand.setLogo("any_logo");
         savedBrand = brandRepository.save(brand);
     }
 

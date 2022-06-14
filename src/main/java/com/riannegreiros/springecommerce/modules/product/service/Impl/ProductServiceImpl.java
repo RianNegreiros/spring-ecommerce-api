@@ -91,7 +91,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product save(Product product) {
-        productRepository.findByName(product.getName()).orElseThrow(() -> new ResourceNotFoundException("Product", "Name", product.getName()));
+        Optional<Product> productExist = productRepository.findByName(product.getName());
+        if (productExist.isPresent()) {
+            throw new Error("Product already exist with the name: " + productExist.get().getName());
+        }
 
         if (product.getAlias().isBlank()) {
             String defaultAlias = product.getName().replaceAll(" ",  "-");

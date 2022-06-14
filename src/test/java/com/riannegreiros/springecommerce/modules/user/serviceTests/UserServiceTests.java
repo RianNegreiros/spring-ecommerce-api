@@ -30,12 +30,8 @@ public class UserServiceTests {
     @Mock
     private UserRepository userRepository;
     private UserServiceImpl userService;
-    private final StorageService storageService;
+    private StorageService storageService;
     private User user;
-
-    public UserServiceTests(StorageService storageService) {
-        this.storageService = storageService;
-    }
 
     @BeforeEach
     void setUp() {
@@ -59,11 +55,11 @@ public class UserServiceTests {
     @Test
     public void testThrowIfEmailIsTaken() {
         given(userRepository.findUserByEmail(anyString()))
-                .willReturn(Optional.of(user));
+                .willThrow(new Error("User already exists with this email: " + user.getEmail()));
 
         assertThatThrownBy(() -> userService.save(user))
                 .isInstanceOf(Error.class)
-                .hasMessageContaining("User already exists");
+                .hasMessageContaining("User already exists with this email: " + user.getEmail());
 
         verify(userRepository, never()).save(any());
     }
