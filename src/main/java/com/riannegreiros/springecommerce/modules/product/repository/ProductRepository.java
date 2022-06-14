@@ -1,6 +1,7 @@
 package com.riannegreiros.springecommerce.modules.product.repository;
 
 import com.riannegreiros.springecommerce.modules.product.entity.Product;
+import com.riannegreiros.springecommerce.modules.product.entity.ProductDetail;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,4 +29,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT p FROM Product p WHERE p.enabled = true AND p.category.id = ?1 ORDER BY p.name ASC")
     Page<Product> findAllByCategory(Long categoryId, Pageable pageable);
+
+    @Query("DELETE FROM ProductDetail p WHERE p.id = ?1")
+    void  deleteProductDetail(Long id);
 }

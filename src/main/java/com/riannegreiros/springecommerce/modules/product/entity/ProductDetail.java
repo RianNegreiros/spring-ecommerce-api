@@ -14,7 +14,7 @@ public class ProductDetail {
     private String name;
 
     // SQL error when called just "value"
-    @Column(name = "product_detail_value", nullable = false)
+    @Column(name = "`value`", nullable = false)
     private String value;
 
     @ManyToOne

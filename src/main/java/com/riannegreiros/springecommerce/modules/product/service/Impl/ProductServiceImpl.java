@@ -2,9 +2,9 @@ package com.riannegreiros.springecommerce.modules.product.service.Impl;
 
 import com.riannegreiros.springecommerce.AWS.StorageService;
 import com.riannegreiros.springecommerce.exception.ResourceNotFoundException;
-import com.riannegreiros.springecommerce.modules.category.entity.Category;
 import com.riannegreiros.springecommerce.modules.category.repository.CategoryRepository;
 import com.riannegreiros.springecommerce.modules.product.entity.Product;
+import com.riannegreiros.springecommerce.modules.product.entity.ProductDetail;
 import com.riannegreiros.springecommerce.modules.product.entity.ProductImage;
 import com.riannegreiros.springecommerce.modules.product.repository.ProductRepository;
 import com.riannegreiros.springecommerce.modules.product.service.ProductService;
@@ -18,9 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 @Service
@@ -113,6 +110,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<ProductDetail> findAllProductDetails(Long id) {
+        Product productExist = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id.toString()));
+        return productExist.getDetails();
+    }
+
+    @Override
     public void updateEnabledStatus(Long id, boolean status) {
         productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product", "ID", id.toString()));
 
@@ -120,12 +123,41 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Product update(Product product, Long id) {
+        Product productExist = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id.toString()));
+        productExist.setName(product.getName());
+        productExist.setAlias(productExist.getAlias());
+        productExist.setFullDescription(product.getFullDescription());
+        productExist.setShortDescription(product.getShortDescription());
+        productExist.setInStock(product.isInStock());
+        productExist.setCost(product.getCost());
+        productExist.setPrice(product.getPrice());
+        productExist.setDiscountPercent(product.getDiscountPercent());
+        productExist.setLength(product.getLength());
+        productExist.setWidth(product.getWidth());
+        productExist.setWeight(product.getWeight());
+        productExist.setCategory(product.getCategory());
+        productExist.setBrand(product.getBrand());
+        return productRepository.save(productExist);
+    }
+
+    @Override
+    public Product addDetail(ProductDetail productDetail, Long id) {
+        Product productExist = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id.toString()));
+        productExist.getDetails().add(productDetail);
+        return productRepository.save(productExist);
+    }
+
+    @Override
+    public void deleteDetail(Long id) {
+        productRepository.deleteProductDetail(id);
+    }
+
+    @Override
     public void delete(Long id) throws IOException {
         Product productExist = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Brand", "ID", id.toString()));
         storageService.deleteFile(productExist.getMainImagePath());
-        productExist.getImages().forEach(image -> {
-            storageService.deleteFile(image.getName());
-        });
+        productExist.getImages().forEach(image -> storageService.deleteFile(image.getName()));
         productRepository.delete(productExist);
     }
 
@@ -142,51 +174,47 @@ public class ProductServiceImpl implements ProductService {
         Product productExist = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id.toString()));
         for (MultipartFile multipartFile : multipartFiles) {
             if (!multipartFile.isEmpty()) {
-                Path path = Paths.get("/images/product-images/" + productExist.getId().toString() + multipartFile.getOriginalFilename());
-                if (!productExist.containsImageName(path.toString())) productExist.addExtraImage(path.toString());
-                byte[] bytes = multipartFile.getBytes();
-                Files.write(path, bytes);
-                productExist.addExtraImage(path.toString());
+                String fileName = "product-images/" + productExist.getId().toString() + multipartFile.getOriginalFilename();
+                storageService.uploadFile(fileName, multipartFile);
+                productExist.addExtraImage(fileName);
             }
         }
     }
 
     @Override
-    public void saveProductDetails(String[] detailNames, String[] detailValues, Product product) {
+    public void saveProductDetails(String[] detailNames, String[] detailValues, Long id) {
+        Product productExist = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id.toString()));
         if (detailNames.length <= 0 || detailValues.length <= 0) return;
 
         for (int i = 0; i < detailNames.length; i++) {
             String name = detailNames[i];
             String value = detailValues[i];
 
-            if (!name.isBlank() && !value.isBlank()) product.addDetail(name, value);
+            if (!name.isBlank() && !value.isBlank()) productExist.addDetail(name, value);
         }
     }
 
     @Override
-    public void saveExistingImageNames(String[] imageIDs, String[] imageNames, Product product) {
+    public void saveExistingImageNames(String[] imageIDs, String[] imageNames, Long id) {
+        Product productExist = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id.toString()));
         if (imageIDs.length <= 0 || imageNames.length <= 0) return;
 
         Set<ProductImage> images = new HashSet<>();
 
         for (int i = 0; i < imageIDs.length; i++) {
-            Long id = Long.parseLong(imageIDs[i]);
+            Long imageId = Long.parseLong(imageIDs[i]);
             String name = imageNames[i];
 
-            images.add(new ProductImage(id, name, product));
+            images.add(new ProductImage(imageId, name, productExist));
         }
 
-        product.setImages(images);
+        productExist.setImages(images);
     }
 
     @Override
-    public void saveProductPrice(Product product) {
-        Product productExist = productRepository.findById(product.getId()).orElseThrow(() -> new ResourceNotFoundException("user", "id", product.getId().toString()));
-        productExist.setCost(product.getCost());
-        productExist.setPrice(product.getPrice());
-        productExist.setDiscountPercent(product.getDiscountPercent());
-
-        productRepository.save(productExist);
+    public void updatePrice(Long id, Float price) {
+        Product productExist = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("category", "id", id.toString()));
+        productExist.setPrice(price);
     }
 
     @Override

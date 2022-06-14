@@ -30,18 +30,15 @@ public class Product {
 
     @Column(name = "updated_time")
     private Date updatedTime;
-
     private Boolean enabled;
 
     @Column
     private Boolean inStock;
-
     private Float cost;
     private Float price;
 
     @Column(name = "discount_percent")
     private Float discountPercent;
-
     private Float length;
     private Float width;
     private Float height;
