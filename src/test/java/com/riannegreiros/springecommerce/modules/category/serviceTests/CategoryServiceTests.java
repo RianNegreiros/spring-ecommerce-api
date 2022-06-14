@@ -1,5 +1,6 @@
 package com.riannegreiros.springecommerce.modules.category.serviceTests;
 
+import com.riannegreiros.springecommerce.AWS.StorageService;
 import com.riannegreiros.springecommerce.modules.category.entity.Category;
 import com.riannegreiros.springecommerce.modules.category.repository.CategoryRepository;
 import com.riannegreiros.springecommerce.modules.category.service.Impl.CategoryServiceImpl;
@@ -32,9 +33,15 @@ public class CategoryServiceTests {
     private CategoryRepository categoryRepository;
     private CategoryServiceImpl categoryService;
 
+    private StorageService storageService;
+
+    public CategoryServiceTests(StorageService storageService) {
+        this.storageService = storageService;
+    }
+
     @BeforeEach
     void setUp() {
-        categoryService = new CategoryServiceImpl(categoryRepository);
+        categoryService = new CategoryServiceImpl(categoryRepository, storageService);
     }
 
     @Test

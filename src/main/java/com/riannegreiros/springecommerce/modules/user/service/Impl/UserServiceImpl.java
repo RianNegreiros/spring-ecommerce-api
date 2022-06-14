@@ -1,5 +1,7 @@
 package com.riannegreiros.springecommerce.modules.user.service.Impl;
 
+import com.riannegreiros.springecommerce.AWS.StorageService;
+import com.riannegreiros.springecommerce.modules.category.entity.Category;
 import com.riannegreiros.springecommerce.modules.user.entity.User;
 import com.riannegreiros.springecommerce.exception.ResourceNotFoundException;
 import com.riannegreiros.springecommerce.modules.user.repository.UserRepository;
@@ -18,9 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.Writer;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -30,12 +29,14 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final PasswordEncoder passwordEncoder;
-
     private final UserRepository userRepository;
 
-    public UserServiceImpl(PasswordEncoder passwordEncoder, UserRepository userRepository) {
+    private final StorageService storageService;
+
+    public UserServiceImpl(PasswordEncoder passwordEncoder, UserRepository userRepository, StorageService storageService) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
+        this.storageService = storageService;
     }
 
     @Override
@@ -78,13 +79,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(UUID id) throws IOException {
         User userExist = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id.toString()));
-        if (Files.exists(Path.of(userExist.getImagePath()))) Files.delete(Path.of(userExist.getImagePath()));
+        storageService.deleteFile(userExist.getImagePath());
         userRepository.deleteById(id);
-    }
-
-    @Override
-    public User findByEmail(String email) {
-        return userRepository.findUserByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
     }
 
     @Override
@@ -102,9 +98,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public void saveImage(MultipartFile multipartFile, UUID id) throws IOException {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id.toString()));
-        byte[] bytes = multipartFile.getBytes();
-        Path path = Paths.get("/images/user-images/" + user.getId().toString() + multipartFile.getOriginalFilename());
-        Files.write(path, bytes);
-        user.setPhoto(path.toString());
+        String fileName = "users-images/" + user.getId().toString() + multipartFile.getOriginalFilename();
+        storageService.uploadFile(fileName, multipartFile);
+        user.setPhoto(fileName);
+    }
+
+    @Override
+    public byte[] findImage(UUID id) throws IOException {
+        User userExist = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("category", "id", id.toString()));
+        return storageService.downloadFile(userExist.getImagePath());
     }
 }

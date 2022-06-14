@@ -1,5 +1,6 @@
 package com.riannegreiros.springecommerce.modules.user.serviceTests;
 
+import com.riannegreiros.springecommerce.AWS.StorageService;
 import com.riannegreiros.springecommerce.modules.user.entity.User;
 import com.riannegreiros.springecommerce.exception.ResourceNotFoundException;
 import com.riannegreiros.springecommerce.modules.user.repository.UserRepository;
@@ -29,12 +30,17 @@ public class UserServiceTests {
     @Mock
     private UserRepository userRepository;
     private UserServiceImpl userService;
+    private final StorageService storageService;
     private User user;
+
+    public UserServiceTests(StorageService storageService) {
+        this.storageService = storageService;
+    }
 
     @BeforeEach
     void setUp() {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        userService = new UserServiceImpl(passwordEncoder, userRepository);
+        userService = new UserServiceImpl(passwordEncoder, userRepository, storageService);
         user = new User("any_mail@mail.com", "any_password", "any_name", "any_name");
     }
 

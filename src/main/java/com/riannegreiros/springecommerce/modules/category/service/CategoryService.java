@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface CategoryService {
     Category findCategory(String alias);
+    byte[] findImage(Long id) throws IOException;
     FindAllResponse findAll(Integer page, Integer size, String sortBy, String sortDir);
     FindAllResponse findAllRootCategories();
     FindAllResponse findAllByKeyword(String keyword, Integer page, Integer size, String sortBy, String sortDir);

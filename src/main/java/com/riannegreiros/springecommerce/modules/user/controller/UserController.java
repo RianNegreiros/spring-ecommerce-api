@@ -4,6 +4,7 @@ import com.riannegreiros.springecommerce.modules.user.entity.User;
 import com.riannegreiros.springecommerce.modules.user.service.UserService;
 import com.riannegreiros.springecommerce.utils.AppConstants;
 import com.riannegreiros.springecommerce.utils.FindAllResponse;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +40,18 @@ public class UserController {
         servletResponse.setContentType("text/csv");
         servletResponse.addHeader("Content-Disposition","attachment; filename=\"users.csv\"");
         userService.writeUsersToCSV(servletResponse.getWriter());
+    }
+
+    @GetMapping("/image/{id}")
+    public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable(name = "id") UUID id) throws IOException {
+        byte[] data = userService.findImage(id);
+        ByteArrayResource resource = new ByteArrayResource(data);
+        return ResponseEntity
+                .ok()
+                .contentLength(data.length)
+                .header("Content-type", "application/octet-stream")
+                .header("Content-disposition", "attachment: filename=\"" + id + "\"")
+                .body(resource);
     }
 
     @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE })

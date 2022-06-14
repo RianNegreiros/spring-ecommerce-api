@@ -1,5 +1,6 @@
 package com.riannegreiros.springecommerce.modules.category.service.Impl;
 
+import com.riannegreiros.springecommerce.AWS.StorageService;
 import com.riannegreiros.springecommerce.modules.category.entity.Category;
 import com.riannegreiros.springecommerce.modules.category.repository.CategoryRepository;
 import com.riannegreiros.springecommerce.modules.category.service.CategoryService;
@@ -14,9 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.Writer;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 @Service
@@ -25,8 +23,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository) {
+    private final StorageService storageService;
+
+    public CategoryServiceImpl(CategoryRepository categoryRepository, StorageService storageService) {
         this.categoryRepository = categoryRepository;
+        this.storageService = storageService;
     }
 
     @Override
@@ -134,16 +135,21 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void delete(Long id) throws IOException {
         Category categoryExist = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("category", "id", id.toString()));
-        if (Files.exists(Path.of(categoryExist.getImagePath()))) Files.delete(Path.of(categoryExist.getImagePath()));
+        storageService.deleteFile(categoryExist.getImagePath());
         categoryRepository.deleteById(id);
     }
 
     @Override
     public void saveImage(MultipartFile multipartFile, Long id) throws IOException {
         Category categoryExist = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("category", "id", id.toString()));
-        byte[] bytes = multipartFile.getBytes();
-        Path path = Paths.get("/images/user-images/" + categoryExist.getId().toString() + multipartFile.getOriginalFilename());
-        Files.write(path, bytes);
-        categoryExist.setImage(path.toString());
+        String fileName = "categories-images/" + categoryExist.getId().toString() + multipartFile.getOriginalFilename();
+        storageService.uploadFile(fileName, multipartFile);
+        categoryExist.setImage(fileName);
+    }
+
+    @Override
+    public byte[] findImage(Long id) throws IOException {
+        Category categoryExist = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("category", "id", id.toString()));
+        return storageService.downloadFile(categoryExist.getImagePath());
     }
 }
