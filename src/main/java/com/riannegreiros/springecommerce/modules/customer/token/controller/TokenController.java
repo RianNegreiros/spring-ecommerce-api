@@ -9,6 +9,7 @@ import com.riannegreiros.springecommerce.exception.APIException;
 import com.riannegreiros.springecommerce.modules.customer.entity.Customer;
 import com.riannegreiros.springecommerce.modules.customer.service.Impl.CustomerServiceImpl;
 import com.riannegreiros.springecommerce.modules.customer.token.service.Impl.TokenServiceImpl;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +30,7 @@ import static com.riannegreiros.springecommerce.utils.JWTConstants.JWTSECRET;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+@ApiOperation(value = "Controller to handle tokens", tags = {"Token Controller"})
 @RestController
 @RequestMapping("/api/token")
 public class TokenController {

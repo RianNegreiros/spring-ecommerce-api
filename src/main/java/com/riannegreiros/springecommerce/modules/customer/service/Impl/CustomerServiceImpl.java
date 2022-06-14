@@ -67,7 +67,7 @@ public class CustomerServiceImpl implements CustomerService {
         customerExist.setState(customer.getState());
         customerExist.setCountry(customer.getCountry());
         customerExist.setPostalCode(customer.getPostalCode());
-        customerRepository.save(customerExist);
+        return customerRepository.save(customerExist);
     }
 
     @Override

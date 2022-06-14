@@ -23,6 +23,15 @@ import static com.riannegreiros.springecommerce.utils.JWTConstants.JWTSECRET;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    public static final String[] AUTH_WHITELIST = {
+            "/authenticate",
+            "/swagger-resources/**",
+            "/swagger-ui/**",
+            "/v2/api-docs",
+            "/webjars/**"
+    };
+
     private final CustomUserDetailsService userDetailsService;
     private final CustomCustomerDetailsService customCustomerDetailsService;
 
@@ -51,6 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().disable();
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.authorizeRequests().antMatchers(AUTH_WHITELIST).permitAll();
         http.authorizeRequests().antMatchers("/api/customers/**").permitAll();
         http.authorizeRequests().antMatchers("/api/token/**").permitAll();
         http.authorizeRequests().antMatchers("/api/users/**", "/api/settings/**").hasAuthority("Admin");
