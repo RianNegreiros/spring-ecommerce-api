@@ -1,6 +1,8 @@
 package com.riannegreiros.springecommerce.modules.product.service.Impl;
 
+import com.riannegreiros.springecommerce.AWS.StorageService;
 import com.riannegreiros.springecommerce.exception.ResourceNotFoundException;
+import com.riannegreiros.springecommerce.modules.category.entity.Category;
 import com.riannegreiros.springecommerce.modules.category.repository.CategoryRepository;
 import com.riannegreiros.springecommerce.modules.product.entity.Product;
 import com.riannegreiros.springecommerce.modules.product.entity.ProductImage;
@@ -28,9 +30,12 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository) {
+    private final StorageService storageService;
+
+    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository, StorageService storageService) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.storageService = storageService;
     }
 
     @Override
@@ -117,18 +122,19 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void delete(Long id) throws IOException {
         Product productExist = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Brand", "ID", id.toString()));
-        if (Files.exists(Path.of(productExist.getMainImagePath()))) Files.delete(Path.of(productExist.getMainImagePath()));
-        if (Files.exists(Path.of(productExist.getMainImagePath()).getParent())) Files.delete(Path.of(productExist.getMainImagePath()).getParent());
+        storageService.deleteFile(productExist.getMainImagePath());
+        productExist.getImages().forEach(image -> {
+            storageService.deleteFile(image.getName());
+        });
         productRepository.delete(productExist);
     }
 
     @Override
     public void saveImage(MultipartFile multipartFile, Long id) throws IOException {
         Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id.toString()));
-        byte[] bytes = multipartFile.getBytes();
-        Path path = Paths.get("/images/product-images/" + product.getId().toString() + multipartFile.getOriginalFilename());
-        Files.write(path, bytes);
-        product.setMainImage(path.toString());
+        String fileName = "product-images/" + product.getId().toString() + multipartFile.getOriginalFilename();
+        storageService.uploadFile(fileName, multipartFile);
+        product.setMainImage(fileName);
     }
 
     @Override
@@ -181,5 +187,11 @@ public class ProductServiceImpl implements ProductService {
         productExist.setDiscountPercent(product.getDiscountPercent());
 
         productRepository.save(productExist);
+    }
+
+    @Override
+    public byte[] findImage(Long id) throws IOException {
+        Product productExist = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("category", "id", id.toString()));
+        return storageService.downloadFile(productExist.getMainImage());
     }
 }

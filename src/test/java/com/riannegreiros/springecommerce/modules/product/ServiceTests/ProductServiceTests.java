@@ -1,5 +1,6 @@
 package com.riannegreiros.springecommerce.modules.product.ServiceTests;
 
+import com.riannegreiros.springecommerce.AWS.StorageService;
 import com.riannegreiros.springecommerce.exception.ResourceNotFoundException;
 import com.riannegreiros.springecommerce.modules.category.repository.CategoryRepository;
 import com.riannegreiros.springecommerce.modules.product.entity.Product;
@@ -35,10 +36,11 @@ public class ProductServiceTests {
     @Mock
     CategoryRepository categoryRepository;
     ProductServiceImpl productService;
+    StorageService storageService;
 
     @BeforeEach
     void setUp() {
-        productService = new ProductServiceImpl(productRepository, categoryRepository);
+        productService = new ProductServiceImpl(productRepository, categoryRepository, storageService);
     }
 
     @Test

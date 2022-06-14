@@ -11,6 +11,7 @@ public interface ProductService {
     FindAllResponse findAll(Integer page, Integer size, String sortBy, String sortDir);
     FindAllResponse findAllByKeyword(String keyword, Integer page, Integer size, String sortBy, String sortDir);
     FindAllResponse findAllByCategory(Long categoryId, Integer page, Integer size, String sortBy, String sortDir);    Product save (Product product);
+    byte[] findImage(Long id) throws IOException;
     void updateEnabledStatus(Long id, boolean status);
     void delete(Long id) throws IOException;
     void saveImage(MultipartFile multipartFile, Long id) throws IOException;

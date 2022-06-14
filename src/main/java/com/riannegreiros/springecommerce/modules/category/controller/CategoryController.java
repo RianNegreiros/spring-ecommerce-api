@@ -4,6 +4,7 @@ import com.riannegreiros.springecommerce.modules.category.entity.Category;
 import com.riannegreiros.springecommerce.modules.category.service.CategoryService;
 import com.riannegreiros.springecommerce.utils.AppConstants;
 import com.riannegreiros.springecommerce.utils.FindAllResponse;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -55,6 +56,18 @@ public class CategoryController {
         servletResponse.setContentType("text/csv");
         servletResponse.addHeader("Content-Disposition","attachment; filename=\"categories.csv\"");
         categoryService.writeCategoriesToCSV(servletResponse.getWriter());
+    }
+
+    @GetMapping("/image/{id}")
+    public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable(name = "id") Long id) throws IOException {
+        byte[] data = categoryService.findImage(id);
+        ByteArrayResource resource = new ByteArrayResource(data);
+        return ResponseEntity
+                .ok()
+                .contentLength(data.length)
+                .header("Content-type", "application/octet-stream")
+                .header("Content-disposition", "attachment: filename=\"" + id + "\"")
+                .body(resource);
     }
 
     @PostMapping()
