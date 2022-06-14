@@ -57,8 +57,22 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public Customer update(Customer customer, UUID id) {
+        Customer customerExist = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer", "ID", id.toString()));
+        customerExist.setEmail(customer.getEmail());
+        customerExist.setFirstName(customer.getFirstName());
+        customerExist.setLastName(customer.getLastName());
+        customerExist.setPhoneNumber(customer.getPhoneNumber());
+        customerExist.setCity(customer.getCity());
+        customerExist.setState(customer.getState());
+        customerExist.setCountry(customer.getCountry());
+        customerExist.setPostalCode(customer.getPostalCode());
+        customerRepository.save(customerExist);
+    }
+
+    @Override
     public void enable(UUID id) {
-        Customer findCustomer = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer", "ID", id.toString()));
-        findCustomer.setEnabled(true);
+        Customer customerExist = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer", "ID", id.toString()));
+        customerExist.setEnabled(true);
     }
 }

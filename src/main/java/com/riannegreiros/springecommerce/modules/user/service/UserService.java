@@ -14,7 +14,6 @@ public interface UserService {
     User save(User user);
     User update(User user, UUID id);
     void delete(UUID id) throws IOException;
-
     void writeUsersToCSV(Writer writer) throws IOException;
     void saveImage(MultipartFile multipartFile, UUID id) throws IOException;
 }
