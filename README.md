@@ -1,6 +1,8 @@
 # API Rest for a E-commerce
 
-[Deploy on Heroku](https://blooming-lowlands-71896.herokuapp.com/swagger-ui/index.html)
+[Deploy on Heroku](https://blooming-lowlands-71896.herokuapp.com/api)
+
+[Documentation with Swagger](https://blooming-lowlands-71896.herokuapp.com/swagger-ui/index.html)
 
 ## Access rights table
 
